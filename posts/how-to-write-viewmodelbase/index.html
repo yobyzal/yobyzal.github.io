@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="zh-cn">
+  <head>
+    <title>编写 &#34;ViewModelBase&#34; in MVVM (WPF) // yobyzal的网络笔记</title>
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.57.2" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="yobyzal" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://yobyzal.github.io/css/main.min.59023e5fd38d6ecb0e1dfbb295077c3c67e00e3b9eb3feaf34b5a5e6b332897a.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="编写 &#34;ViewModelBase&#34; in MVVM (WPF)"/>
+<meta name="twitter:description" content="这篇博文记录如何编写 MVVM 模式中 ViewModelBase 类。
+ ViewModelBase 类是所有视图模型的基类，可以包含一些通用逻辑； ViewModelBase 类需要继承 INotifyPropertyChanged 接口以便通知视图做出变更；
+public abstract class ViewModelBase : INotifyPropertyChanged { public event PropertyChangedEventHandler PropertyChanged; protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); } }   代码中，[CallerMemberName] 特性使方法调用更加简单，只需要写明 OnPropertyChanged() 即可。如果不使用这个特性，就需要写成以下两种形式之一：
+ 填入字符串形式的属性名 OnPropertyChanged(&quot;SomeProperty&quot;) 这种形式下如果属性名写错了，IDE是不会报错的，运行起来也不会达到我们想要的结果； 使用 lambda 表达式，OnPropertyChanged(() =&gt; SomeProperty) 使用 nameof(SomeProperty)  以上两种方式都不如使用 [CallerMemberName] 写起来方便，举个例子：
+public string FirstName { get { return _firstName; } set { _firtName = value; OnPropertyChanged(); // 使用 [CallerMemberName] // OnPropertyChanged(&quot;FirstName&quot;) // OnPropertyChanged(() =&gt; FirstName) // OnPropertyChanged(nameof(FirstName)) } }  有了 ref 关键词后，还可以写成下面这种形式："/>
+
+    <meta property="og:title" content="编写 &#34;ViewModelBase&#34; in MVVM (WPF)" />
+<meta property="og:description" content="这篇博文记录如何编写 MVVM 模式中 ViewModelBase 类。
+ ViewModelBase 类是所有视图模型的基类，可以包含一些通用逻辑； ViewModelBase 类需要继承 INotifyPropertyChanged 接口以便通知视图做出变更；
+public abstract class ViewModelBase : INotifyPropertyChanged { public event PropertyChangedEventHandler PropertyChanged; protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); } }   代码中，[CallerMemberName] 特性使方法调用更加简单，只需要写明 OnPropertyChanged() 即可。如果不使用这个特性，就需要写成以下两种形式之一：
+ 填入字符串形式的属性名 OnPropertyChanged(&quot;SomeProperty&quot;) 这种形式下如果属性名写错了，IDE是不会报错的，运行起来也不会达到我们想要的结果； 使用 lambda 表达式，OnPropertyChanged(() =&gt; SomeProperty) 使用 nameof(SomeProperty)  以上两种方式都不如使用 [CallerMemberName] 写起来方便，举个例子：
+public string FirstName { get { return _firstName; } set { _firtName = value; OnPropertyChanged(); // 使用 [CallerMemberName] // OnPropertyChanged(&quot;FirstName&quot;) // OnPropertyChanged(() =&gt; FirstName) // OnPropertyChanged(nameof(FirstName)) } }  有了 ref 关键词后，还可以写成下面这种形式：" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://yobyzal.github.io/posts/how-to-write-viewmodelbase/" />
+<meta property="article:published_time" content="2019-09-02T16:34:24+08:00" />
+<meta property="article:modified_time" content="2019-09-02T16:34:24+08:00" />
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://yobyzal.github.io/"><img class="app-header-avatar" src="/img/avatar.jpg" alt="yobyzal" /></a>
+      <h1>yobyzal的网络笔记</h1>
+      <p>yobyzal的网络笔记</p>
+      <div class="app-header-social">
+        
+          <a target="_blank" href="https://github.com/yobyzal"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>github</title>
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg></a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">编写 &#34;ViewModelBase&#34; in MVVM (WPF)</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Sep 2, 2019
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          1 min read
+        </div><div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tag">
+  <title>tag</title>
+  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line>
+</svg>
+          <a class="tag" href="https://yobyzal.github.io/tags/c#/">C#</a><a class="tag" href="https://yobyzal.github.io/tags/wpf/">WPF</a><a class="tag" href="https://yobyzal.github.io/tags/mvvm/">MVVM</a></div></div>
+    </header>
+    <div class="post-content">
+      <p>这篇博文记录如何编写 MVVM 模式中 <code>ViewModelBase</code> 类。</p>
+
+<ol>
+<li><code>ViewModelBase</code> 类是所有视图模型的基类，可以包含一些通用逻辑；</li>
+
+<li><p><code>ViewModelBase</code> 类需要继承 <code>INotifyPropertyChanged</code> 接口以便通知视图做出变更；</p>
+
+<pre><code class="language-csharp">public abstract class ViewModelBase : INotifyPropertyChanged
+{
+public event PropertyChangedEventHandler PropertyChanged;
+
+protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+{
+    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+}
+}
+</code></pre></li>
+</ol>
+
+<p>代码中，<code>[CallerMemberName]</code> 特性使方法调用更加简单，只需要写明 <code>OnPropertyChanged()</code> 即可。如果不使用这个特性，就需要写成以下两种形式之一：</p>
+
+<ul>
+<li>填入字符串形式的属性名 <code>OnPropertyChanged(&quot;SomeProperty&quot;)</code>
+这种形式下如果属性名写错了，IDE是不会报错的，运行起来也不会达到我们想要的结果；</li>
+<li>使用 <code>lambda</code> 表达式，<code>OnPropertyChanged(() =&gt; SomeProperty)</code></li>
+<li>使用 <code>nameof(SomeProperty)</code></li>
+</ul>
+
+<p>以上两种方式都不如使用 <code>[CallerMemberName]</code> 写起来方便，举个例子：</p>
+
+<pre><code class="language-csharp">public string FirstName
+{
+    get { return _firstName; }
+    set
+    {
+        _firtName = value;
+        OnPropertyChanged(); // 使用 [CallerMemberName]
+        // OnPropertyChanged(&quot;FirstName&quot;)
+        // OnPropertyChanged(() =&gt; FirstName)
+        // OnPropertyChanged(nameof(FirstName))
+    }
+}
+</code></pre>
+
+<p>有了 <code>ref</code> 关键词后，还可以写成下面这种形式：</p>
+
+<pre><code class="language-csharp">public string FirstName
+{
+	get { return _firstName; }
+	set { SetProperty(ref _firstName, value); }
+}
+
+protected virtual bool SetProperty&lt;T&gt;(ref T storage, T value, [CallerMemberName] string propertyName = &quot;&quot;)
+{
+	if (EqualityComparer&lt;T&gt;.Default.Equals(storage, value))
+		return false;
+	storage = value;
+	this.OnPropertyChanged(propertyName);
+	return true;
+}
+</code></pre>
+
+<p><code>SetProperty</code> 方法会先检查属性值是否发生变化，只有发生变化才通知视图，同时，使用 <code>virtual</code> 关键词，方便对其进行扩展。</p>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>
