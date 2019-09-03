@@ -6,10 +6,20 @@
     <description>Recent content on yobyzal的网络笔记</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 02 Sep 2019 16:34:24 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 03 Sep 2019 08:24:57 +0800</lastBuildDate>
     
 	<atom:link href="https://yobyzal.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>How to Assign Multiple Ip Addresses to Single Network Card in Linux</title>
+      <link>https://yobyzal.github.io/posts/how-to-assign-multiple-ip-addresses-to-single-network-card-in-linux/</link>
+      <pubDate>Tue, 03 Sep 2019 08:24:57 +0800</pubDate>
+      
+      <guid>https://yobyzal.github.io/posts/how-to-assign-multiple-ip-addresses-to-single-network-card-in-linux/</guid>
+      <description>转载自：How To Assign Multiple IP Addresses To Single Network Card In Linux
+ Some of you might wondering why would we assign multiple IP addresses to single Network card. There can be many reasons. Say for example, you are doing some testing on your Linux box that requires two or more network cards. Would you buy new one? No, It is not necessary! You can set multiple IP series, for example 192.</description>
+    </item>
     
     <item>
       <title>编写 &#34;ViewModelBase&#34; in MVVM (WPF)</title>
