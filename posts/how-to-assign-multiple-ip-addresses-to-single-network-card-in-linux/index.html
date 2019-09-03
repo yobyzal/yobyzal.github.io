@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="zh-cn">
   <head>
-    <title>How to Assign Multiple Ip Addresses to Single Network Card in Linux // yobyzal的网络笔记</title>
+    <title>【转载】如何在Linux下为单网卡配置多个IP地址 // yobyzal的网络笔记</title>
     <meta charset="utf-8" />
     <meta name="generator" content="Hugo 0.57.2" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -11,12 +11,12 @@
 
     
     <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="How to Assign Multiple Ip Addresses to Single Network Card in Linux"/>
-<meta name="twitter:description" content="转载自：How To Assign Multiple IP Addresses To Single Network Card In Linux
+<meta name="twitter:title" content="【转载】如何在Linux下为单网卡配置多个IP地址"/>
+<meta name="twitter:description" content="转载：How To Assign Multiple IP Addresses To Single Network Card In Linux
  Some of you might wondering why would we assign multiple IP addresses to single Network card. There can be many reasons. Say for example, you are doing some testing on your Linux box that requires two or more network cards. Would you buy new one? No, It is not necessary! You can set multiple IP series, for example 192."/>
 
-    <meta property="og:title" content="How to Assign Multiple Ip Addresses to Single Network Card in Linux" />
-<meta property="og:description" content="转载自：How To Assign Multiple IP Addresses To Single Network Card In Linux
+    <meta property="og:title" content="【转载】如何在Linux下为单网卡配置多个IP地址" />
+<meta property="og:description" content="转载：How To Assign Multiple IP Addresses To Single Network Card In Linux
  Some of you might wondering why would we assign multiple IP addresses to single Network card. There can be many reasons. Say for example, you are doing some testing on your Linux box that requires two or more network cards. Would you buy new one? No, It is not necessary! You can set multiple IP series, for example 192." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://yobyzal.github.io/posts/how-to-assign-multiple-ip-addresses-to-single-network-card-in-linux/" />
@@ -43,7 +43,7 @@
       
   <article class="post">
     <header class="post-header">
-      <h1 class ="post-title">How to Assign Multiple Ip Addresses to Single Network Card in Linux</h1>
+      <h1 class ="post-title">【转载】如何在Linux下为单网卡配置多个IP地址</h1>
       <div class="post-meta">
         <div>
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
@@ -69,7 +69,7 @@
       
 
 <blockquote>
-<p>转载自：<a href="https://www.ostechnix.com/how-to-assign-multiple-ip-addresses-to-single-network-card-in-linux/">How To Assign Multiple IP Addresses To Single Network Card In Linux</a></p>
+<p>转载：<a href="https://www.ostechnix.com/how-to-assign-multiple-ip-addresses-to-single-network-card-in-linux/">How To Assign Multiple IP Addresses To Single Network Card In Linux</a></p>
 </blockquote>
 
 <p>Some of you might wondering why would we assign multiple IP addresses to single Network card. There can be many reasons. Say for example, you are doing some testing on your Linux box that requires two or more network cards. Would you buy new one? No, It is not necessary! You can set multiple IP series, for example 192.168.1.0, 192.168.2.0, 192.168.3.0 etc., for a network card, and use all of them at the same time. Sounds useful? Of course, it is! This method might be helpful when setting up Internet sharing servers, like Squid proxy. I have done this for one of my client years ago. They had computer labs with different IP series in their network and only one Squid proxy server. So, I created multiple IP series in the squid proxy server, and shared the Internet to the different networks. If you ever been in a situation like this, just follow this guide.</p>
@@ -218,7 +218,7 @@ bound to 192.168.1.105 -- renewal in 42937 seconds.
 
 <p>Sample output:</p>
 
-<p><img src="/static/img/Assign-Multiple-IP-Addresses1.png" alt="Assign multiple IP addresses In Ubuntu" /></p>
+<p><img src="Assign-Multiple-IP-Addresses1.png" alt="Assign multiple IP addresses In Ubuntu" /></p>
 
 <p>That’s it. Also, You can check after rebooting the system. You will see that the new IP is assigned permanently.</p>
 
@@ -245,7 +245,7 @@ bound to 192.168.1.105 -- renewal in 42937 seconds.
 
 <p>For other IP address, add line “IPADDR2=”192.168.3.150”. You can add any number of IP addresses one by one.</p>
 
-<p><img src="/static/img/Assign-Multiple-IP-Addresses-2.png" alt="Assign multiple IP addresses In CentOS" /></p>
+<p><img src="Assign-Multiple-IP-Addresses-2.png" alt="Assign multiple IP addresses In CentOS" /></p>
 
 <p>Save and close the file.</p>
 
@@ -346,7 +346,7 @@ bound to 192.168.1.105 -- renewal in 42937 seconds.
   address 10.0.0.105/16
 </code></pre>
 
-<p><img src="/static/img/Assign-Multiple-IP-Addresses-3.png" alt="Assign Different Class IP Addresses In Ubuntu" /></p>
+<p><img src="Assign-Multiple-IP-Addresses-3.png" alt="Assign Different Class IP Addresses In Ubuntu" /></p>
 
 <p>Save and close the file.</p>
 
@@ -362,7 +362,7 @@ bound to 192.168.1.105 -- renewal in 42937 seconds.
 
 <p>Sample output:</p>
 
-<p><img src="/static/img/Assign-Multiple-IP-Addresses-4.png" alt="" /></p>
+<p><img src="Assign-Multiple-IP-Addresses-4.png" alt="" /></p>
 
 <p>Ping the new IP address with command:</p>
 
@@ -401,7 +401,7 @@ PREFIX2=16
 
 <p>Make sure the IPADDR number (<strong>IPADDR2</strong>) and PREFIX number (<strong>PREFIX2</strong>) are same for each network.</p>
 
-<p><img src="/static/img/Assign-Multiple-IP-Addresses-5.png" alt="Assign Different Class IP Addresses In CentOS" /></p>
+<p><img src="Assign-Multiple-IP-Addresses-5.png" alt="Assign Different Class IP Addresses In CentOS" /></p>
 
 <p>Save and close the file. Restart network service to take effect the changes.</p>
 

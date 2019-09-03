@@ -8,11 +8,6 @@
   </url>
   
   <url>
-    <loc>https://yobyzal.github.io/posts/how-to-assign-multiple-ip-addresses-to-single-network-card-in-linux/</loc>
-    <lastmod>2019-09-03T08:24:57+08:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://yobyzal.github.io/tags/linux/</loc>
     <lastmod>2019-09-03T08:24:57+08:00</lastmod>
   </url>
@@ -39,6 +34,11 @@
   
   <url>
     <loc>https://yobyzal.github.io/</loc>
+    <lastmod>2019-09-03T08:24:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yobyzal.github.io/posts/how-to-assign-multiple-ip-addresses-to-single-network-card-in-linux/</loc>
     <lastmod>2019-09-03T08:24:57+08:00</lastmod>
   </url>
   
