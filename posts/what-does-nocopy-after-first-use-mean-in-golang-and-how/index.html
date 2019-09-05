@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="zh-cn">
+  <head>
+    <title>【转载】What does “nocopy after first use” mean in golang and how // yobyzal的网络笔记</title>
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.58.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="yobyzal" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://yobyzal.github.io/css/main.min.59023e5fd38d6ecb0e1dfbb295077c3c67e00e3b9eb3feaf34b5a5e6b332897a.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="【转载】What does “nocopy after first use” mean in golang and how"/>
+<meta name="twitter:description" content="原文：https://medium.com/@bronzesword/what-does-nocopy-after-first-use-mean-in-golang-and-how-12396c31de47
+ When we read golang source code or learn to use some builtin structs, frequently we may be told that “must not be copied after first use”, such as sync.Cond, sync.Map, sync.Mutex (nearly all types in sync package) and strings.Builder. Most of the time it is required so for safety reasons, for example you have a struct with a pointer field and you don’t want it to be copied since a shallow copy will make these two hold the same pointer and be unsafe."/>
+
+    <meta property="og:title" content="【转载】What does “nocopy after first use” mean in golang and how" />
+<meta property="og:description" content="原文：https://medium.com/@bronzesword/what-does-nocopy-after-first-use-mean-in-golang-and-how-12396c31de47
+ When we read golang source code or learn to use some builtin structs, frequently we may be told that “must not be copied after first use”, such as sync.Cond, sync.Map, sync.Mutex (nearly all types in sync package) and strings.Builder. Most of the time it is required so for safety reasons, for example you have a struct with a pointer field and you don’t want it to be copied since a shallow copy will make these two hold the same pointer and be unsafe." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://yobyzal.github.io/posts/what-does-nocopy-after-first-use-mean-in-golang-and-how/" />
+<meta property="article:published_time" content="2019-09-03T08:24:57+08:00" />
+<meta property="article:modified_time" content="2019-09-03T08:24:57+08:00" />
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://yobyzal.github.io/"><img class="app-header-avatar" src="/img/avatar.jpg" alt="yobyzal" /></a>
+      <h1>yobyzal的网络笔记</h1>
+      <p>yobyzal的网络笔记</p>
+      <div class="app-header-social">
+        
+          <a target="_blank" href="https://github.com/yobyzal"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>github</title>
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg></a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">【转载】What does “nocopy after first use” mean in golang and how</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Sep 3, 2019
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          4 min read
+        </div><div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tag">
+  <title>tag</title>
+  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line>
+</svg>
+          <a class="tag" href="https://yobyzal.github.io/tags/golang/">golang</a></div></div>
+    </header>
+    <div class="post-content">
+      
+
+<blockquote>
+<p>原文：<a href="https://medium.com/@bronzesword/what-does-nocopy-after-first-use-mean-in-golang-and-how-12396c31de47">https://medium.com/@bronzesword/what-does-nocopy-after-first-use-mean-in-golang-and-how-12396c31de47</a></p>
+</blockquote>
+
+<p>When we read golang source code or learn to use some builtin structs, frequently we may be told that “must not be copied after first use”, such as <a href="https://golang.org/src/sync/cond.go">sync.Cond</a>, <a href="https://golang.org/src/sync/map.go">sync.Map</a>, <a href="https://golang.org/src/sync/mutex.go">sync.Mutex</a> (nearly all types in sync package) and <a href="https://golang.org/src/strings/builder.go">strings.Builder</a>. Most of the time it is required so for safety reasons, for example you have a struct with a pointer field and you don’t want it to be copied since a shallow copy will make these two hold the same pointer and be unsafe. So what does golang do to ensure that? There isn’t a perfect answer as far as I know (see discussions <a href="https://github.com/golang/go/issues/8005">here</a>), but in this story, I will review the following two solutions and hope it provide a better understanding.</p>
+
+<h1 id="1-runtime-checking">1. runtime checking</h1>
+
+<p>This is done by encapsulating a pointer to itself and check before any further operation. A typical example is <code>strings.Builder</code> :</p>
+
+<pre><code class="language-go">type Builder struct {
+    addr *Builder
+    buf []byte
+}
+
+func (b *Builder) copyCheck() {
+    if b.addr == nil {
+       b.addr = (*Builder)(noescape(unsafe.Pointer(b)))
+    } else if b.addr != b {
+       panic(&quot;strings: illegal use of non-zero Builder copied by value&quot;)
+    }
+}
+
+func (b *Builder) Write(p []byte) (int, error) {
+    b.copyCheck()
+    ...
+}
+
+// test case
+var a strings.Builder
+a.Write([]byte(&quot;testa&quot;))
+
+var b = a
+b.Write([]byte(&quot;testb&quot;))   // will panic here
+</code></pre>
+
+<p>As you can see, when we declare builder <code>a</code> and write, <code>a.addr</code> will be assigned its own address. After we assign <code>a</code> to <code>b</code>, <code>a.addr</code> will be shallowly copied to <code>b.addr</code>, but the newly allocated address of <code>b</code> is certainly not the same as <code>a.addr</code>, so panic happens. This solution utilizes the fact that pointer is shallowly copied and easy to understand.</p>
+
+<p>Another example is <code>sync.Cond</code>:</p>
+
+<pre><code class="language-go">type Cond struct {
+    noCopy  noCopy
+    L       Locker
+    notify  notifyList
+    checker copyChecker
+}
+type copyChecker uintptrfunc (c *copyChecker) check() {
+    if uintptr(*c) != uintptr(unsafe.Pointer(c)) &amp;&amp;
+       !atomic.CompareAndSwapUintptr((*uintptr)(c), 0, uintptr(unsafe.Pointer(c))) &amp;&amp;
+       uintptr(*c) != uintptr(unsafe.Pointer(c)) {
+           panic(&quot;sync.Cond is copied&quot;)
+    }
+}
+func (c *Cond) Wait() {
+    c.checker.check()
+    ...
+}
+</code></pre>
+
+<p>It is a bit difficult to read the <code>check()</code> function at first sight, so let’s define a similar struct and try to find out why:</p>
+
+<pre><code class="language-go">type cond struct {
+    checker copyChecker
+}
+type copyChecker uintptrfunc (c *copyChecker) check() {
+    fmt.Printf(&quot;Before: c: %v, *c: %v, uintptr(*c): %v, uintptr(unsafe.Pointer(c)): %v\n&quot;, c, *c, uintptr(*c), uintptr(unsafe.Pointer(c)))
+    atomic.CompareAndSwapUintptr((*uintptr)(c), 0, uintptr(unsafe.Pointer(c)))
+    fmt.Printf(&quot;After: c: %v, *c: %v, uintptr(*c): %v, uintptr(unsafe.Pointer(c)): %v\n&quot;, c, *c, uintptr(*c), uintptr(unsafe.Pointer(c)))
+}
+// test case
+var a cond
+a.checker.check()
+
+b := a
+b.checker.check()
+
+// results
+Before: c: 0x414020, *c: 0, uintptr(*c): 0, uintptr(unsafe.Pointer(c)): 4276256
+After: c: 0x414020, *c: 4276256, uintptr(*c): 4276256, uintptr(unsafe.Pointer(c)): 4276256
+Before: c: 0x414044, *c: 4276256, uintptr(*c): 4276256, uintptr(unsafe.Pointer(c)): 4276292
+After: c: 0x414044, *c: 4276256, uintptr(*c): 4276256, uintptr(unsafe.Pointer(c)): 4276292
+</code></pre>
+
+<p>Clearly when we declare <code>a</code> , its <code>checker</code> field is <code>0</code>and the address of checker field is <code>0x414020</code> or the decimal <code>4276256</code> . After <code>CompareAndSwapUintptr()</code> , its checker field is assigned its own address, say <code>4276256</code> . When we assign <code>a</code> to <code>b</code> , the <code>checker</code> field of <code>a</code> is copied to that of <code>b</code> , but the address of b’s <code>checker</code> field is actually <code>0x414044</code> or the decimal <code>4276292</code>. So it finally meets all three conditions(in fact two) and detects copy. This is still a “self pointer” approach and I guess you got it.</p>
+
+<p>To summarize, runtime checking often uses a self pointer and won’t check until runtime.</p>
+
+<h1 id="2-go-vet-copylocks-checking">2. Go vet copylocks checking</h1>
+
+<p><code>-copylocks</code> is actually a <code>go vet</code> flag which checks whether a <code>locker</code> type is copied or not. A <code>locker</code> type is a type which has <code>Lock()</code> and <code>Unlock()</code> methods. See <a href="https://golang.org/src/cmd/vendor/golang.org/x/tools/go/analysis/passes/copylock/copylock.go?h=copylock">here</a> for more details. As mentioned before, nearly all types in <code>sync</code> package must not be copied and actually it’s guaranteed just by encapsulating a <code>noCopy</code> struct:</p>
+
+<pre><code class="language-go">// src/sync/cond.go
+type noCopy struct{}
+func (*noCopy) Lock() {}
+func (*noCopy) Unlock() {}
+
+// sync.Pool
+type Pool struct {
+   noCopy noCopy
+   ...
+}
+
+// sync.WaitGroup
+type WaitGroup struct {
+   noCopy noCopy
+   ...
+}
+</code></pre>
+
+<p><code>Go vet</code> will examine every statement and operand for a <code>locker</code> type and in this way copy could be found before runtime. So if you want a type to be not copied, what you need to do is simply defining a <code>noCopy</code> struct in your package and encapsulating it as extra field like the following:</p>
+
+<pre><code class="language-go">type noCopy struct{}
+func (*noCopy) Lock() {}
+func (*noCopy) Unlock() {}
+
+type MyType struct {
+   noCopy noCopy
+   ...
+}
+</code></pre>
+
+<p>Then <code>go vet</code> will do the check work for you. That’s it.</p>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>Though currently we don’t have a perfect answer for this issue, these two approaches are still instructive in similar situations. Self pointer or go vet check? Give it a try next time :)</p>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

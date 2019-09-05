@@ -8,6 +8,16 @@
   </url>
   
   <url>
+    <loc>https://yobyzal.github.io/categories/golang/</loc>
+    <lastmod>2019-09-03T08:24:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yobyzal.github.io/tags/golang/</loc>
+    <lastmod>2019-09-03T08:24:57+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://yobyzal.github.io/tags/linux/</loc>
     <lastmod>2019-09-03T08:24:57+08:00</lastmod>
   </url>
@@ -34,6 +44,11 @@
   
   <url>
     <loc>https://yobyzal.github.io/</loc>
+    <lastmod>2019-09-03T08:24:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yobyzal.github.io/posts/what-does-nocopy-after-first-use-mean-in-golang-and-how/</loc>
     <lastmod>2019-09-03T08:24:57+08:00</lastmod>
   </url>
   

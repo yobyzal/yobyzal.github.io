@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>golang on yobyzal的网络笔记</title>
+    <link>https://yobyzal.github.io/tags/golang/</link>
+    <description>Recent content in golang on yobyzal的网络笔记</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 03 Sep 2019 08:24:57 +0800</lastBuildDate>
+    
+	<atom:link href="https://yobyzal.github.io/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>【转载】What does “nocopy after first use” mean in golang and how</title>
+      <link>https://yobyzal.github.io/posts/what-does-nocopy-after-first-use-mean-in-golang-and-how/</link>
+      <pubDate>Tue, 03 Sep 2019 08:24:57 +0800</pubDate>
+      
+      <guid>https://yobyzal.github.io/posts/what-does-nocopy-after-first-use-mean-in-golang-and-how/</guid>
+      <description>原文：https://medium.com/@bronzesword/what-does-nocopy-after-first-use-mean-in-golang-and-how-12396c31de47
+ When we read golang source code or learn to use some builtin structs, frequently we may be told that “must not be copied after first use”, such as sync.Cond, sync.Map, sync.Mutex (nearly all types in sync package) and strings.Builder. Most of the time it is required so for safety reasons, for example you have a struct with a pointer field and you don’t want it to be copied since a shallow copy will make these two hold the same pointer and be unsafe.</description>
+    </item>
+    
+  </channel>
+</rss>
