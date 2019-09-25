@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="yobyzal">
+  <meta name="description" content="yobyzal的网络笔记">
+  
+  
+  <link rel="prev" href="https://yobyzal.github.io/2019/03-abstract-factory-pattern/" />
+  <link rel="next" href="https://yobyzal.github.io/2019/01-simple-factory-pattern/" />
+  <link rel="canonical" href="https://yobyzal.github.io/2019/02-factory-method-pattern/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           02 - 工厂方法模式 | yobyzal的网络笔记
+       
+  </title>
+  <meta name="title" content="02 - 工厂方法模式 | yobyzal的网络笔记">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "https:\/\/yobyzal.github.io\/"
+    },
+    "articleSection" : "posts",
+    "name" : "02 - 工厂方法模式",
+    "headline" : "02 - 工厂方法模式",
+    "description" : "目录 工厂方法模式-Factory Method Pattern 日志记录器的设计 工厂方法模式概述 完整的解决方案 反射与配置文件 重载的工厂方法 工厂方法的隐藏 工厂方法模式总结         本文整理自：https:\/\/blog.csdn.net\/lovelion\/article\/details\/17517213，在此仅作整理学习。     工厂方法模式-Factory Method Pattern 简单工厂模式虽然简单，但存在一个很严重的问题。当系统中需要引入新产品时，由于静态工厂方法通过所传入参数的不同来创建不同的产品，这必定要修改工厂类的源代码，将违背“开闭原则”，如何实现增加新产品而不影响已有代码？工厂方法模式应运而生，本文将介绍第二种工厂模式——工厂方法模式。\n 日志记录器的设计 Sunny软件公司欲开发一个系统运行日志记录器(Logger)，该记录器可以通过多种途径保存系统的运行日志，如通过文件记录或数据库记录，用户可以通过修改配置文件灵活地更换日志记录方式。在设计各类日志记录器时，Sunny公司的开发人员发现需要对日志记录器进行一些初始化工作，初始化参数的设置过程较为复杂，而且某些参数的设置有严格的先后次序，否则可能会发生记录失败。如何封装记录器的初始化过程并保证多种记录器切换的灵活性是Sunny公司开发人员面临的一个难题。\n Sunny公司的开发人员通过对该需求进行分析，发现该日志记录器有两个设计要点：\n  需要封装日志记录器的初始化过程，这些初始化工作较为复杂，例如需要初始化其他相关的类，还有可能需要读取配置文件（例如连接数据库或创建文件），导致代码较长，如果将它们都写在构造函数中，会导致构造函数庞大，不利于代码的修改和维护；\n  用户可能需要更换日志记录方式，在客户端代码中需要提供一种灵活的方式来选择日志记录器，尽量在不修改源代码的基础上更换或者增加日志记录方式。\n   Sunny公司开发人员最初使用简单工厂模式对日志记录器进行了设计，初始结构如图1所示：\n   在图1中，LoggerFactory 充当创建日志记录器的工厂，提供了工厂方法 createLogger() 用于创建日志记录器， Logger 是抽象日志记录器接口，其子类为具体日志记录器。其中，工厂类 LoggerFactory 代码片段如下所示：\n class LoggerFactory { \/\/静态工厂方法 public static Logger createLogger(String args) { if(args.equalsIgnoreCase(\x26quot;db\x26quot;)) { \/\/连接数据库，代码省略 \/\/创建数据库日志记录器对象 Logger logger = new DatabaseLogger(); \/\/初始化数据库日志记录器，代码省略 return logger; } else if(args.",
+    "inLanguage" : "zh-cn",
+    "author" : "yobyzal",
+    "creator" : "yobyzal",
+    "publisher": "yobyzal",
+    "accountablePerson" : "yobyzal",
+    "copyrightHolder" : "yobyzal",
+    "copyrightYear" : "2019",
+    "datePublished": "2019-09-25 11:34:24 \x2b0800 CST",
+    "dateModified" : "2019-09-25 11:34:24 \x2b0800 CST",
+    "url" : "https:\/\/yobyzal.github.io\/2019\/02-factory-method-pattern\/",
+    "wordCount" : "527",
+    "keywords" : [ "设计模式", "yobyzal的网络笔记"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://yobyzal.github.io/">yobyzal的网络笔记</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://yobyzal.github.io/">yobyzal的网络笔记</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">02 - 工厂方法模式</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="https://yobyzal.github.io/" rel="author">yobyzal</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2019-09-25 itemprop="datePublished">September 25, 2019</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="https://yobyzal.github.io/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"> 设计模式 </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <div id="toc" class="toc">
+<div id="toctitle">目录</div>
+<ul class="sectlevel1">
+<li><a href="#_工厂方法模式_factory_method_pattern">工厂方法模式-Factory Method Pattern</a>
+<ul class="sectlevel2">
+<li><a href="#_日志记录器的设计">日志记录器的设计</a></li>
+<li><a href="#_工厂方法模式概述">工厂方法模式概述</a></li>
+<li><a href="#_完整的解决方案">完整的解决方案</a></li>
+<li><a href="#_反射与配置文件">反射与配置文件</a></li>
+<li><a href="#_重载的工厂方法">重载的工厂方法</a></li>
+<li><a href="#_工厂方法的隐藏">工厂方法的隐藏</a></li>
+<li><a href="#_工厂方法模式总结">工厂方法模式总结</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+本文整理自：https://blog.csdn.net/lovelion/article/details/17517213，在此仅作整理学习。
+</td>
+</tr>
+</table>
+</div>
+<div class="sect1">
+<h2 id="_工厂方法模式_factory_method_pattern">工厂方法模式-Factory Method Pattern</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>简单工厂模式虽然简单，但存在一个很严重的问题。<strong>当系统中需要引入新产品时，由于静态工厂方法通过所传入参数的不同来创建不同的产品，这必定要修改工厂类的源代码，将违背“开闭原则”，如何实现增加新产品而不影响已有代码？</strong>工厂方法模式应运而生，本文将介绍第二种工厂模式——工厂方法模式。</p>
+</div>
+<div class="sect2">
+<h3 id="_日志记录器的设计">日志记录器的设计</h3>
+<div class="paragraph">
+<p>Sunny软件公司欲开发一个系统运行日志记录器(Logger)，该记录器可以通过多种途径保存系统的运行日志，如通过文件记录或数据库记录，用户可以通过修改配置文件灵活地更换日志记录方式。在设计各类日志记录器时，Sunny公司的开发人员发现需要对日志记录器进行一些初始化工作，初始化参数的设置过程较为复杂，而且某些参数的设置有严格的先后次序，否则可能会发生记录失败。如何封装记录器的初始化过程并保证多种记录器切换的灵活性是Sunny公司开发人员面临的一个难题。</p>
+</div>
+<div class="paragraph">
+<p>Sunny公司的开发人员通过对该需求进行分析，发现该日志记录器有两个设计要点：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>需要封装日志记录器的初始化过程，这些初始化工作较为复杂，例如需要初始化其他相关的类，还有可能需要读取配置文件（例如连接数据库或创建文件），导致代码较长，如果将它们都写在构造函数中，会导致构造函数庞大，不利于代码的修改和维护；</p>
+</li>
+<li>
+<p>用户可能需要更换日志记录方式，在客户端代码中需要提供一种灵活的方式来选择日志记录器，尽量在不修改源代码的基础上更换或者增加日志记录方式。</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Sunny公司开发人员最初使用简单工厂模式对日志记录器进行了设计，初始结构如图1所示：</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/基于简单工厂模式设计的日志记录器结构图.jpg" alt="基于简单工厂模式设计的日志记录器结构图">
+</div>
+</div>
+<div class="paragraph">
+<p>在图1中，<code>LoggerFactory</code> 充当创建日志记录器的工厂，提供了工厂方法 <code>createLogger()</code> 用于创建日志记录器， <code>Logger</code> 是抽象日志记录器接口，其子类为具体日志记录器。其中，工厂类 <code>LoggerFactory</code> 代码片段如下所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">LoggerFactory</span> {
+    <span class="comment">//静态工厂方法</span>
+    <span class="directive">public</span> <span class="directive">static</span> <span class="predefined-type">Logger</span> createLogger(<span class="predefined-type">String</span> args) {
+        <span class="keyword">if</span>(args.equalsIgnoreCase(<span class="string"><span class="delimiter">&quot;</span><span class="content">db</span><span class="delimiter">&quot;</span></span>)) {
+            <span class="comment">//连接数据库，代码省略</span>
+            <span class="comment">//创建数据库日志记录器对象</span>
+            <span class="predefined-type">Logger</span> logger = <span class="keyword">new</span> DatabaseLogger();
+            <span class="comment">//初始化数据库日志记录器，代码省略</span>
+            <span class="keyword">return</span> logger;
+        }
+        <span class="keyword">else</span> <span class="keyword">if</span>(args.equalsIgnoreCase(<span class="string"><span class="delimiter">&quot;</span><span class="content">file</span><span class="delimiter">&quot;</span></span>)) {
+            <span class="comment">//创建日志文件</span>
+            <span class="comment">//创建文件日志记录器对象</span>
+            <span class="predefined-type">Logger</span> logger = <span class="keyword">new</span> FileLogger();
+            <span class="comment">//初始化文件日志记录器，代码省略</span>
+            <span class="keyword">return</span> logger;
+        }
+        <span class="keyword">else</span> {
+            <span class="keyword">return</span> <span class="predefined-constant">null</span>;
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>为了突出设计重点，我们对上述代码进行了简化，省略了具体日志记录器类的初始化代码。在 <code>LoggerFactory</code> 类中提供了静态工厂方法 <code>createLogger()</code> ，用于根据所传入的参数创建各种不同类型的日志记录器。通过使用简单工厂模式，我们将日志记录器对象的创建和使用分离，客户端只需使用由工厂类创建的日志记录器对象即可，无须关心对象的创建过程，但是我们发现，虽然简单工厂模式实现了对象的创建和使用分离，但是仍然存在如下两个问题：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>工厂类过于庞大，包含了大量的 <code>if…else…</code> 代码，导致维护和测试难度增大；</p>
+</li>
+<li>
+<p>系统扩展不灵活，如果增加新类型的日志记录器，必须修改静态工厂方法的业务逻辑，违反了“开闭原则”。</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>如何解决这两个问题，提供一种简单工厂模式的改进方案？这就是工厂方法模式的动机之一。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_工厂方法模式概述">工厂方法模式概述</h3>
+<div class="paragraph">
+<p>在简单工厂模式中只提供一个工厂类，该工厂类处于对产品类进行实例化的中心位置，它需要知道每一个产品对象的创建细节，并决定何时实例化哪一个产品类。简单工厂模式最大的缺点是当有新产品要加入到系统中时，必须修改工厂类，需要在其中加入必要的业务逻辑，这违背了“开闭原则”。此外，在简单工厂模式中，所有的产品都由同一个工厂创建，工厂类职责较重，业务逻辑较为复杂，具体产品与工厂类之间的耦合度高，严重影响了系统的灵活性和扩展性，而工厂方法模式则可以很好地解决这一问题。</p>
+</div>
+<div class="paragraph">
+<p>在工厂方法模式中，我们不再提供一个统一的工厂类来创建所有的产品对象，而是针对不同的产品提供不同的工厂，系统提供一个与产品等级结构对应的工厂等级结构。工厂方法模式定义如下：</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+工厂方法模式(Factory Method Pattern)：定义一个用于创建对象的接口，让子类决定将哪一个类实例化。工厂方法模式让一个类的实例化延迟到其子类。工厂方法模式又简称为工厂模式(Factory Pattern)，又可称作虚拟构造器模式(Virtual Constructor Pattern)或多态工厂模式(Polymorphic Factory Pattern)。工厂方法模式是一种类创建型模式。
+</blockquote>
+</div>
+<div class="paragraph">
+<p>工厂方法模式提供一个抽象工厂接口来声明抽象工厂方法，而由其子类来具体实现工厂方法，创建具体的产品对象。工厂方法模式结构如图2所示：</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/工厂方法模式结构图.jpg" alt="工厂方法模式结构图">
+</div>
+</div>
+<div class="paragraph">
+<p>在工厂方法模式结构图中包含如下几个角色：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Product（抽象产品）：它是定义产品的接口，是工厂方法模式所创建对象的超类型，也就是产品对象的公共父类。</p>
+</li>
+<li>
+<p>ConcreteProduct（具体产品）：它实现了抽象产品接口，某种类型的具体产品由专门的具体工厂创建，具体工厂和具体产品之间一一对应。</p>
+</li>
+<li>
+<p>Factory（抽象工厂）：在抽象工厂类中，声明了工厂方法(Factory Method)，用于返回一个产品。抽象工厂是工厂方法模式的核心，所有创建对象的工厂类都必须实现该接口。</p>
+</li>
+<li>
+<p>ConcreteFactory（具体工厂）：它是抽象工厂类的子类，实现了抽象工厂中定义的工厂方法，并可由客户端调用，返回一个具体产品类的实例。</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>与简单工厂模式相比，工厂方法模式最重要的区别是引入了抽象工厂角色，抽象工厂可以是接口，也可以是抽象类或者具体类，其典型代码如下所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">interface</span> <span class="class">Factory</span> {
+    <span class="directive">public</span> Product factoryMethod();
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>在抽象工厂中声明了工厂方法但并未实现工厂方法，具体产品对象的创建由其子类负责，客户端针对抽象工厂编程，可在运行时再指定具体工厂类，具体工厂类实现了工厂方法，不同的具体工厂可以创建不同的具体产品，其典型代码如下所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">ConcreteFactory</span> <span class="directive">implements</span> Factory {
+    <span class="directive">public</span> Product factoryMethod() {
+        <span class="keyword">return</span> <span class="keyword">new</span> ConcreteProduct();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>在实际使用时，具体工厂类在实现工厂方法时除了创建具体产品对象之外，还可以负责产品对象的初始化工作以及一些资源和环境配置工作，例如连接数据库、创建文件等。</p>
+</div>
+<div class="paragraph">
+<p>在客户端代码中，只需关心工厂类即可，不同的具体工厂可以创建不同的产品，典型的客户端类代码片段如下所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="error">…</span><span class="error">…</span>
+Factory factory;
+factory = <span class="keyword">new</span> ConcreteFactory(); <span class="comment">//可通过配置文件实现</span>
+Product product;
+product = factory.factoryMethod();
+<span class="error">…</span><span class="error">…</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>可以通过配置文件来存储具体工厂类ConcreteFactory的类名，更换新的具体工厂时无须修改源代码，系统扩展更为方便。</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+工厂方法模式中的工厂方法能否为静态方法？为什么？
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_完整的解决方案">完整的解决方案</h3>
+<div class="paragraph">
+<p>Sunny公司开发人员决定使用工厂方法模式来设计日志记录器，其基本结构如图3所示：</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/日志记录器结构图.jpg" alt="日志记录器结构图">
+</div>
+</div>
+<div class="paragraph">
+<p>在图3中，Logger接口充当抽象产品，其子类FileLogger和DatabaseLogger充当具体产品，LoggerFactory接口充当抽象工厂，其子类FileLoggerFactory和DatabaseLoggerFactory充当具体工厂。完整代码如下所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">//日志记录器接口：抽象产品</span>
+<span class="type">interface</span> <span class="class">Logger</span> {
+    <span class="directive">public</span> <span class="type">void</span> writeLog();
+}
+
+<span class="comment">//数据库日志记录器：具体产品</span>
+<span class="type">class</span> <span class="class">DatabaseLogger</span> <span class="directive">implements</span> <span class="predefined-type">Logger</span> {
+    <span class="directive">public</span> <span class="type">void</span> writeLog() {
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">数据库日志记录。</span><span class="delimiter">&quot;</span></span>);
+    }
+}
+
+<span class="comment">//文件日志记录器：具体产品</span>
+<span class="type">class</span> <span class="class">FileLogger</span> <span class="directive">implements</span> <span class="predefined-type">Logger</span> {
+    <span class="directive">public</span> <span class="type">void</span> writeLog() {
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">文件日志记录。</span><span class="delimiter">&quot;</span></span>);
+    }
+}
+
+<span class="comment">//日志记录器工厂接口：抽象工厂</span>
+<span class="type">interface</span> <span class="class">LoggerFactory</span> {
+    <span class="directive">public</span> <span class="predefined-type">Logger</span> createLogger();
+}
+
+<span class="comment">//数据库日志记录器工厂类：具体工厂</span>
+<span class="type">class</span> <span class="class">DatabaseLoggerFactory</span> <span class="directive">implements</span> LoggerFactory {
+    <span class="directive">public</span> <span class="predefined-type">Logger</span> createLogger() {
+        <span class="comment">//连接数据库，代码省略</span>
+        <span class="comment">//创建数据库日志记录器对象</span>
+        <span class="predefined-type">Logger</span> logger = <span class="keyword">new</span> DatabaseLogger();
+        <span class="comment">//初始化数据库日志记录器，代码省略</span>
+        <span class="keyword">return</span> logger;
+    }
+}
+
+<span class="comment">//文件日志记录器工厂类：具体工厂</span>
+<span class="type">class</span> <span class="class">FileLoggerFactory</span> <span class="directive">implements</span> LoggerFactory {
+    <span class="directive">public</span> <span class="predefined-type">Logger</span> createLogger() {
+        <span class="comment">//创建文件日志记录器对象</span>
+        <span class="predefined-type">Logger</span> logger = <span class="keyword">new</span> FileLogger();
+        <span class="comment">//创建文件，代码省略</span>
+        <span class="keyword">return</span> logger;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>编写如下客户端测试代码：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">Client</span> {
+    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main(<span class="predefined-type">String</span> args<span class="type">[]</span>) {
+        LoggerFactory factory;
+        <span class="predefined-type">Logger</span> logger;
+        factory = <span class="keyword">new</span> FileLoggerFactory(); <span class="comment">//可引入配置文件实现</span>
+        logger = factory.createLogger();
+        logger.writeLog();
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_反射与配置文件">反射与配置文件</h3>
+<div class="paragraph">
+<p>为了让系统具有更好的灵活性和可扩展性，Sunny公司开发人员决定对日志记录器客户端代码进行重构，使得可以在不修改任何客户端代码的基础上更换或增加新的日志记录方式。</p>
+</div>
+<div class="paragraph">
+<p>在客户端代码中将不再使用new关键字来创建工厂对象，而是将具体工厂类的类名存储在配置文件（如XML文件）中，通过读取配置文件获取类名字符串，再使用Java的反射机制，根据类名字符串生成对象。在整个实现过程中需要用到两个技术：Java反射机制与配置文件读取。软件系统的配置文件通常为XML文件，我们可以使用DOM (Document Object Model)、SAX (Simple API for XML)、StAX (Streaming API for XML)等技术来处理XML文件。关于DOM、SAX、StAX等技术的详细学习大家可以参考其他相关资料，在此不予扩展。</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+关于Java与XML的相关资料，大家可以阅读Tom Myers和Alexander Nakhimovsky所著的《Java XML编程指南》一书或访问developer Works 中国中的“Java XML 技术专题”，参考链接：http://www.ibm.com/developerworks/cn/xml/theme/x-java.html
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Java反射(Java Reflection)是指在程序运行时获取已知名称的类或已有对象的相关信息的一种机制，包括类的方法、属性、父类等信息，还包括实例的创建和实例类型的判断等。在反射中使用最多的类是Class，Class类的实例表示正在运行的Java应用程序中的类和接口，其forName(String className)方法可以返回与带有给定字符串名的类或接口相关联的 Class对象，再通过Class对象的newInstance()方法创建此对象所表示的类的一个新实例，即通过一个类名字符串得到类的实例。如创建一个字符串类型的对象，其代码如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">//通过类名生成实例对象并将其返回</span>
+<span class="predefined-type">Class</span> c=<span class="predefined-type">Class</span>.forName(<span class="string"><span class="delimiter">&quot;</span><span class="content">String</span><span class="delimiter">&quot;</span></span>);
+<span class="predefined-type">Object</span> obj=c.newInstance();
+<span class="keyword">return</span> obj;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>此外，在JDK中还提供了java.lang.reflect包，封装了其他与反射相关的类，此处只用到上述简单的反射代码，在此不予扩展。</p>
+</div>
+<div class="paragraph">
+<p>Sunny公司开发人员创建了如下XML格式的配置文件config.xml用于存储具体日志记录器工厂类类名：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="error">&lt;</span>!— config.xml --<span class="error">&gt;</span>
+<span class="preprocessor">&lt;?xml version=&quot;1.0&quot;?&gt;</span>
+<span class="tag">&lt;config&gt;</span>
+    <span class="tag">&lt;className&gt;</span>FileLoggerFactory<span class="tag">&lt;/className&gt;</span>
+<span class="tag">&lt;/config&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>为了读取该配置文件并通过存储在其中的类名字符串反射生成对象，Sunny公司开发人员开发了一个名为XMLUtil的工具类，其详细代码如下所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">//工具类XMLUtil.java</span>
+<span class="keyword">import</span> <span class="include">javax.xml.parsers</span>.*;
+<span class="keyword">import</span> <span class="include">org.w3c.dom</span>.*;
+<span class="keyword">import</span> <span class="include">org.xml.sax.SAXException</span>;
+<span class="keyword">import</span> <span class="include">java.io</span>.*;
+
+<span class="directive">public</span> <span class="type">class</span> <span class="class">XMLUtil</span> {
+<span class="comment">//该方法用于从XML配置文件中提取具体类类名，并返回一个实例对象</span>
+    <span class="directive">public</span> <span class="directive">static</span> <span class="predefined-type">Object</span> getBean() {
+        <span class="keyword">try</span> {
+            <span class="comment">//创建DOM文档对象</span>
+            <span class="predefined-type">DocumentBuilderFactory</span> dFactory = <span class="predefined-type">DocumentBuilderFactory</span>.newInstance();
+            <span class="predefined-type">DocumentBuilder</span> builder = dFactory.newDocumentBuilder();
+            <span class="predefined-type">Document</span> doc;
+            doc = builder.parse(<span class="keyword">new</span> <span class="predefined-type">File</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">config.xml</span><span class="delimiter">&quot;</span></span>));
+
+            <span class="comment">//获取包含类名的文本节点</span>
+            NodeList nl = doc.getElementsByTagName(<span class="string"><span class="delimiter">&quot;</span><span class="content">className</span><span class="delimiter">&quot;</span></span>);
+            Node classNode=nl.item(<span class="integer">0</span>).getFirstChild();
+            <span class="predefined-type">String</span> cName=classNode.getNodeValue();
+
+            <span class="comment">//通过类名生成实例对象并将其返回</span>
+            <span class="predefined-type">Class</span> c=<span class="predefined-type">Class</span>.forName(cName);
+            <span class="predefined-type">Object</span> obj=c.newInstance();
+            <span class="keyword">return</span> obj;
+        }
+        <span class="keyword">catch</span>(<span class="exception">Exception</span> e) {
+            e.printStackTrace();
+            <span class="keyword">return</span> ;
+         }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>有了XMLUtil类后，可以对日志记录器的客户端代码进行修改，不再直接使用new关键字来创建具体的工厂类，而是将具体工厂类的类名存储在XML文件中，再通过XMLUtil类的静态工厂方法getBean()方法进行对象的实例化，代码修改如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">Client</span> {
+    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main(<span class="predefined-type">String</span> args<span class="type">[]</span>) {
+        LoggerFactory factory;
+        <span class="predefined-type">Logger</span> logger;
+        factory = (LoggerFactory)XMLUtil.getBean(); <span class="comment">//getBean()的返回类型为Object，需要进行强制类型转换</span>
+        logger = factory.createLogger();
+        logger.writeLog();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>引入XMLUtil类和XML配置文件后，如果要增加新的日志记录方式，只需要执行如下几个步骤：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>新的日志记录器需要继承抽象日志记录器Logger；</p>
+</li>
+<li>
+<p>对应增加一个新的具体日志记录器工厂，继承抽象日志记录器工厂LoggerFactory，并实现其中的工厂方法createLogger()，设置好初始化参数和环境变量，返回具体日志记录器对象；</p>
+</li>
+<li>
+<p>修改配置文件config.xml，将新增的具体日志记录器工厂类的类名字符串替换原有工厂类类名字符串；</p>
+</li>
+<li>
+<p>编译新增的具体日志记录器类和具体日志记录器工厂类，运行客户端测试类即可使用新的日志记录方式，而原有类库代码无须做任何修改，完全符合“开闭原则”。</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>通过上述重构可以使得系统更加灵活，由于很多设计模式都关注系统的可扩展性和灵活性，因此都定义了抽象层，在抽象层中声明业务方法，而将业务方法的实现放在实现层中。</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>有人说：可以在客户端代码中直接通过反射机制来生成产品对象，在定义产品对象时使用抽象类型，同样可以确保系统的灵活性和可扩展性，增加新的具体产品类无须修改源代码，只需要将其作为抽象产品类的子类再修改配置文件即可，根本不需要抽象工厂类和具体工厂类。</p>
+</div>
+<div class="paragraph">
+<p>试思考这种做法的可行性？如果可行，这种做法是否存在问题？为什么？</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_重载的工厂方法">重载的工厂方法</h3>
+<div class="paragraph">
+<p>Sunny公司开发人员通过进一步分析，发现可以通过多种方式来初始化日志记录器，例如可以为各种日志记录器提供默认实现；还可以为数据库日志记录器提供数据库连接字符串，为文件日志记录器提供文件路径；也可以将参数封装在一个Object类型的对象中，通过Object对象将配置参数传入工厂类。此时，可以提供一组重载的工厂方法，以不同的方式对产品对象进行创建。当然，对于同一个具体工厂而言，无论使用哪个工厂方法，创建的产品类型均要相同。如图4所示：</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/重载的工厂方法结构图.jpg" alt="重载的工厂方法结构图">
+</div>
+</div>
+<div class="paragraph">
+<p>引入重载方法后，抽象工厂LoggerFactory的代码修改如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">interface</span> <span class="class">LoggerFactory</span> {
+    <span class="directive">public</span> <span class="predefined-type">Logger</span> createLogger();
+    <span class="directive">public</span> <span class="predefined-type">Logger</span> createLogger(<span class="predefined-type">String</span> args);
+    <span class="directive">public</span> <span class="predefined-type">Logger</span> createLogger(<span class="predefined-type">Object</span> obj);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>具体工厂类DatabaseLoggerFactory代码修改如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">DatabaseLoggerFactory</span> <span class="directive">implements</span> LoggerFactory {
+    <span class="directive">public</span> <span class="predefined-type">Logger</span> createLogger() {
+        <span class="comment">//使用默认方式连接数据库，代码省略</span>
+        <span class="predefined-type">Logger</span> logger = <span class="keyword">new</span> DatabaseLogger();
+        <span class="comment">//初始化数据库日志记录器，代码省略</span>
+        <span class="keyword">return</span> logger;
+    }
+
+    <span class="directive">public</span> <span class="predefined-type">Logger</span> createLogger(<span class="predefined-type">String</span> args) {
+        <span class="comment">//使用参数args作为连接字符串来连接数据库，代码省略</span>
+        <span class="predefined-type">Logger</span> logger = <span class="keyword">new</span> DatabaseLogger();
+        <span class="comment">//初始化数据库日志记录器，代码省略</span>
+        <span class="keyword">return</span> logger;
+    }
+
+    <span class="directive">public</span> <span class="predefined-type">Logger</span> createLogger(<span class="predefined-type">Object</span> obj) {
+        <span class="comment">//使用封装在参数obj中的连接字符串来连接数据库，代码省略</span>
+        <span class="predefined-type">Logger</span> logger = <span class="keyword">new</span> DatabaseLogger();
+        <span class="comment">//使用封装在参数obj中的数据来初始化数据库日志记录器，代码省略</span>
+        <span class="keyword">return</span> logger;
+    }
+}
+
+<span class="comment">//其他具体工厂类代码省略</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>在抽象工厂中定义多个重载的工厂方法，在具体工厂中实现了这些工厂方法，这些方法可以包含不同的业务逻辑，以满足对不同产品对象的需求。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_工厂方法的隐藏">工厂方法的隐藏</h3>
+<div class="paragraph">
+<p>有时候，为了进一步简化客户端的使用，还可以对客户端隐藏工厂方法，此时，在工厂类中将直接调用产品类的业务方法，客户端无须调用工厂方法创建产品，直接通过工厂即可使用所创建的对象中的业务方法。</p>
+</div>
+<div class="paragraph">
+<p>如果对客户端隐藏工厂方法，日志记录器的结构图将修改为图5所示：</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/隐藏工厂方法后的日志记录器结构图.jpg" alt="隐藏工厂方法后的日志记录器结构图">
+</div>
+</div>
+<div class="paragraph">
+<p>在图5中，抽象工厂类LoggerFactory的代码修改如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">//改为抽象类</span>
+<span class="directive">abstract</span> <span class="type">class</span> <span class="class">LoggerFactory</span> {
+    <span class="comment">//在工厂类中直接调用日志记录器类的业务方法writeLog()</span>
+    <span class="directive">public</span> <span class="type">void</span> writeLog() {
+        <span class="predefined-type">Logger</span> logger = <span class="local-variable">this</span>.createLogger();
+        logger.writeLog();
+    }
+
+    <span class="directive">public</span> <span class="directive">abstract</span> <span class="predefined-type">Logger</span> createLogger();
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>客户端代码修改如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">Client</span> {
+    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main(<span class="predefined-type">String</span> args<span class="type">[]</span>) {
+        LoggerFactory factory;
+        factory = (LoggerFactory)XMLUtil.getBean();
+        factory.writeLog(); <span class="comment">//直接使用工厂对象来调用产品对象的业务方法</span>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>通过将业务方法的调用移入工厂类，可以直接使用工厂对象来调用产品对象的业务方法，客户端无须直接使用工厂方法，在某些情况下我们也可以使用这种设计方案。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_工厂方法模式总结">工厂方法模式总结</h3>
+<div class="paragraph">
+<p>工厂方法模式是简单工厂模式的延伸，它继承了简单工厂模式的优点，同时还弥补了简单工厂模式的不足。工厂方法模式是使用频率最高的设计模式之一，是很多开源框架和API类库的核心模式。</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>主要优点</p>
+<div class="paragraph">
+<p>工厂方法模式的主要优点如下：</p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>在工厂方法模式中，工厂方法用来创建客户所需要的产品，同时还向客户隐藏了哪种具体产品类将被实例化这一细节，用户只需要关心所需产品对应的工厂，无须关心创建细节，甚至无须知道具体产品类的类名。</p>
+</li>
+<li>
+<p>基于工厂角色和产品角色的多态性设计是工厂方法模式的关键。它能够让工厂可以自主确定创建何种产品对象，而如何创建这个对象的细节则完全封装在具体工厂内部。工厂方法模式之所以又被称为多态工厂模式，就正是因为所有的具体工厂类都具有同一抽象父类。</p>
+</li>
+<li>
+<p>使用工厂方法模式的另一个优点是在系统中加入新产品时，无须修改抽象工厂和抽象产品提供的接口，无须修改客户端，也无须修改其他的具体工厂和具体产品，而只要添加一个具体工厂和具体产品就可以了，这样，系统的可扩展性也就变得非常好，完全符合“开闭原则”。</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>主要缺点 ::</p>
+<div class="paragraph">
+<p>工厂方法模式的主要缺点如下：</p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>在添加新产品时，需要编写新的具体产品类，而且还要提供与之对应的具体工厂类，系统中类的个数将成对增加，在一定程度上增加了系统的复杂度，有更多的类需要编译和运行，会给系统带来一些额外的开销。</p>
+</li>
+<li>
+<p>由于考虑到系统的可扩展性，需要引入抽象层，在客户端代码中均使用抽象层进行定义，增加了系统的抽象性和理解难度，且在实现时可能需要用到DOM、反射等技术，增加了系统的实现难度。</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>适用场景</p>
+<div class="paragraph">
+<p>在以下情况下可以考虑使用工厂方法模式：</p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>客户端不知道它所需要的对象的类。在工厂方法模式中，客户端不需要知道具体产品类的类名，只需要知道所对应的工厂即可，具体的产品对象由具体工厂类创建，可将具体工厂类的类名存储在配置文件或数据库中。</p>
+</li>
+<li>
+<p>抽象工厂类通过其子类来指定创建哪个对象。在工厂方法模式中，对于抽象工厂类只需要提供一个创建产品的接口，而由其子类来确定具体要创建的对象，利用面向对象的多态性和里氏代换原则，在程序运行时，子类对象将覆盖父类对象，从而使得系统更容易扩展。</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+练习：使用工厂方法模式设计一个程序来读取各种不同类型的图片格式，针对每一种图片格式都设计一个图片读取器，如GIF图片读取器用于读取GIF格式的图片、JPG图片读取器用于读取JPG格式的图片。需充分考虑系统的灵活性和可扩展性。
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>yobyzal </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=https://yobyzal.github.io/2019/02-factory-method-pattern/>https://yobyzal.github.io/2019/02-factory-method-pattern/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="https://yobyzal.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+                    #设计模式</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="https://yobyzal.github.io/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="https://yobyzal.github.io/2019/03-abstract-factory-pattern/" class="prev" rel="prev" title="03 - 抽象工厂模式"><i class="iconfont icon-left"></i>&nbsp;03 - 抽象工厂模式</a>
+         
+        
+        <a href="https://yobyzal.github.io/2019/01-simple-factory-pattern/" class="next" rel="next" title="01 - 简单工厂模式">01 - 简单工厂模式&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2019</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="https://yobyzal.github.io/">yobyzal</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

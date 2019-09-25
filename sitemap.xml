@@ -1,85 +1,444 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
-  <url>
-    <loc>https://yobyzal.github.io/categories/</loc>
-    <lastmod>2019-09-03T08:24:57+08:00</lastmod>
-  </url>
+    <url>
+      <loc>https://yobyzal.github.io/2019/00-abstract/</loc>
+      
+      <lastmod>2019-09-25T11:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
   
-  <url>
-    <loc>https://yobyzal.github.io/categories/golang/</loc>
-    <lastmod>2019-09-03T08:24:57+08:00</lastmod>
-  </url>
+    <url>
+      <loc>https://yobyzal.github.io/2019/01-simple-factory-pattern/</loc>
+      
+      <lastmod>2019-09-25T11:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
   
-  <url>
-    <loc>https://yobyzal.github.io/tags/golang/</loc>
-    <lastmod>2019-09-03T08:24:57+08:00</lastmod>
-  </url>
+    <url>
+      <loc>https://yobyzal.github.io/2019/02-factory-method-pattern/</loc>
+      
+      <lastmod>2019-09-25T11:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
   
-  <url>
-    <loc>https://yobyzal.github.io/tags/linux/</loc>
-    <lastmod>2019-09-03T08:24:57+08:00</lastmod>
-  </url>
+    <url>
+      <loc>https://yobyzal.github.io/2019/03-abstract-factory-pattern/</loc>
+      
+      <lastmod>2019-09-25T11:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
   
-  <url>
-    <loc>https://yobyzal.github.io/categories/os/</loc>
-    <lastmod>2019-09-03T08:24:57+08:00</lastmod>
-  </url>
+    <url>
+      <loc>https://yobyzal.github.io/2019/04-singleton-pattern/</loc>
+      
+      <lastmod>2019-09-25T11:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
   
-  <url>
-    <loc>https://yobyzal.github.io/tags/os/</loc>
-    <lastmod>2019-09-03T08:24:57+08:00</lastmod>
-  </url>
+    <url>
+      <loc>https://yobyzal.github.io/2019/05-prototype-pattern/</loc>
+      
+      <lastmod>2019-09-25T11:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
   
-  <url>
-    <loc>https://yobyzal.github.io/posts/</loc>
-    <lastmod>2019-09-03T08:24:57+08:00</lastmod>
-  </url>
+    <url>
+      <loc>https://yobyzal.github.io/2019/06-builder-pattern/</loc>
+      
+      <lastmod>2019-09-25T11:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
   
-  <url>
-    <loc>https://yobyzal.github.io/tags/</loc>
-    <lastmod>2019-09-03T08:24:57+08:00</lastmod>
-  </url>
+    <url>
+      <loc>https://yobyzal.github.io/2019/07-adapter-pattern/</loc>
+      
+      <lastmod>2019-09-25T11:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
   
-  <url>
-    <loc>https://yobyzal.github.io/</loc>
-    <lastmod>2019-09-03T08:24:57+08:00</lastmod>
-  </url>
+    <url>
+      <loc>https://yobyzal.github.io/2019/08-bridge-pattern/</loc>
+      
+      <lastmod>2019-09-25T11:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
   
-  <url>
-    <loc>https://yobyzal.github.io/posts/what-does-nocopy-after-first-use-mean-in-golang-and-how/</loc>
-    <lastmod>2019-09-03T08:24:57+08:00</lastmod>
-  </url>
+    <url>
+      <loc>https://yobyzal.github.io/2019/09-compositep-pattern/</loc>
+      
+      <lastmod>2019-09-25T11:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
   
-  <url>
-    <loc>https://yobyzal.github.io/posts/how-to-assign-multiple-ip-addresses-to-single-network-card-in-linux/</loc>
-    <lastmod>2019-09-03T08:24:57+08:00</lastmod>
-  </url>
+    <url>
+      <loc>https://yobyzal.github.io/2019/10-decorator-pattern/</loc>
+      
+      <lastmod>2019-09-25T11:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
   
-  <url>
-    <loc>https://yobyzal.github.io/categories/c#/</loc>
-    <lastmod>2019-09-02T16:34:24+08:00</lastmod>
-  </url>
+    <url>
+      <loc>https://yobyzal.github.io/2019/11-fa%C3%A7ade-pattern/</loc>
+      
+      <lastmod>2019-09-25T11:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
   
-  <url>
-    <loc>https://yobyzal.github.io/tags/c#/</loc>
-    <lastmod>2019-09-02T16:34:24+08:00</lastmod>
-  </url>
+    <url>
+      <loc>https://yobyzal.github.io/2019/12-flyweight-pattern/</loc>
+      
+      <lastmod>2019-09-25T11:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
   
-  <url>
-    <loc>https://yobyzal.github.io/tags/mvvm/</loc>
-    <lastmod>2019-09-02T16:34:24+08:00</lastmod>
-  </url>
+    <url>
+      <loc>https://yobyzal.github.io/2019/13-proxy-pattern/</loc>
+      
+      <lastmod>2019-09-25T11:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
   
-  <url>
-    <loc>https://yobyzal.github.io/tags/wpf/</loc>
-    <lastmod>2019-09-02T16:34:24+08:00</lastmod>
-  </url>
+    <url>
+      <loc>https://yobyzal.github.io/2019/14-chain-of-responsibility-pattern/</loc>
+      
+      <lastmod>2019-09-25T11:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
   
-  <url>
-    <loc>https://yobyzal.github.io/posts/how-to-write-viewmodelbase/</loc>
-    <lastmod>2019-09-02T16:34:24+08:00</lastmod>
-  </url>
+    <url>
+      <loc>https://yobyzal.github.io/2019/15-command-pattern/</loc>
+      
+      <lastmod>2019-09-25T11:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>https://yobyzal.github.io/2019/16-interpreter-pattern/</loc>
+      
+      <lastmod>2019-09-25T11:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>https://yobyzal.github.io/2019/17-iterator-pattern/</loc>
+      
+      <lastmod>2019-09-25T11:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>https://yobyzal.github.io/2019/18-mediator-pattern/</loc>
+      
+      <lastmod>2019-09-25T11:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>https://yobyzal.github.io/2019/19-memento-pattern/</loc>
+      
+      <lastmod>2019-09-25T11:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>https://yobyzal.github.io/2019/20-observer-pattern/</loc>
+      
+      <lastmod>2019-09-25T11:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>https://yobyzal.github.io/2019/21-state-pattern/</loc>
+      
+      <lastmod>2019-09-25T11:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>https://yobyzal.github.io/2019/22-strategy-pattern/</loc>
+      
+      <lastmod>2019-09-25T11:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>https://yobyzal.github.io/2019/23-template-method-pattern/</loc>
+      
+      <lastmod>2019-09-25T11:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>https://yobyzal.github.io/2019/24-visitor-pattern/</loc>
+      
+      <lastmod>2019-09-25T11:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>https://yobyzal.github.io/categories/</loc>
+      
+      <lastmod>2019-09-25T11:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>https://yobyzal.github.io/tags/</loc>
+      
+      <lastmod>2019-09-25T11:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>https://yobyzal.github.io/</loc>
+      
+      <lastmod>2019-09-25T11:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>https://yobyzal.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</loc>
+      
+      <lastmod>2019-09-25T11:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>https://yobyzal.github.io/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</loc>
+      
+      <lastmod>2019-09-25T11:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>https://yobyzal.github.io/posts/design-patterns/</loc>
+      
+      <lastmod>2019-09-25T11:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>https://yobyzal.github.io/2019/what-does-nocopy-after-first-use-mean-in-golang-and-how/</loc>
+      
+      <lastmod>2019-09-03T08:24:57+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>https://yobyzal.github.io/2019/how-to-assign-multiple-ip-addresses-to-single-network-card-in-linux/</loc>
+      
+      <lastmod>2019-09-03T08:24:57+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>https://yobyzal.github.io/categories/golang/</loc>
+      
+      <lastmod>2019-09-03T08:24:57+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>https://yobyzal.github.io/tags/golang/</loc>
+      
+      <lastmod>2019-09-03T08:24:57+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>https://yobyzal.github.io/tags/linux/</loc>
+      
+      <lastmod>2019-09-03T08:24:57+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>https://yobyzal.github.io/categories/os/</loc>
+      
+      <lastmod>2019-09-03T08:24:57+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>https://yobyzal.github.io/tags/os/</loc>
+      
+      <lastmod>2019-09-03T08:24:57+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>https://yobyzal.github.io/posts/</loc>
+      
+      <lastmod>2019-09-03T08:24:57+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>https://yobyzal.github.io/categories/c#/</loc>
+      
+      <lastmod>2019-09-02T16:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>https://yobyzal.github.io/tags/c#/</loc>
+      
+      <lastmod>2019-09-02T16:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>https://yobyzal.github.io/tags/mvvm/</loc>
+      
+      <lastmod>2019-09-02T16:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>https://yobyzal.github.io/tags/wpf/</loc>
+      
+      <lastmod>2019-09-02T16:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>https://yobyzal.github.io/2019/how-to-write-viewmodelbase/</loc>
+      
+      <lastmod>2019-09-02T16:34:24+08:00</lastmod>
+      
+      
+      
+      
+    </url>
   
 </urlset>

@@ -12,31 +12,31 @@
     
     
     <item>
-      <title>【转载】What does “nocopy after first use” mean in golang and how</title>
-      <link>https://yobyzal.github.io/posts/what-does-nocopy-after-first-use-mean-in-golang-and-how/</link>
+      <title>[转载]What does “nocopy after first use” mean in golang and how</title>
+      <link>https://yobyzal.github.io/2019/what-does-nocopy-after-first-use-mean-in-golang-and-how/</link>
       <pubDate>Tue, 03 Sep 2019 08:24:57 +0800</pubDate>
       
-      <guid>https://yobyzal.github.io/posts/what-does-nocopy-after-first-use-mean-in-golang-and-how/</guid>
+      <guid>https://yobyzal.github.io/2019/what-does-nocopy-after-first-use-mean-in-golang-and-how/</guid>
       <description>原文：https://medium.com/@bronzesword/what-does-nocopy-after-first-use-mean-in-golang-and-how-12396c31de47
  When we read golang source code or learn to use some builtin structs, frequently we may be told that “must not be copied after first use”, such as sync.Cond, sync.Map, sync.Mutex (nearly all types in sync package) and strings.Builder. Most of the time it is required so for safety reasons, for example you have a struct with a pointer field and you don’t want it to be copied since a shallow copy will make these two hold the same pointer and be unsafe.</description>
     </item>
     
     <item>
-      <title>【转载】如何在Linux下为单网卡配置多个IP地址</title>
-      <link>https://yobyzal.github.io/posts/how-to-assign-multiple-ip-addresses-to-single-network-card-in-linux/</link>
+      <title>[转载]如何在Linux下为单网卡配置多个IP地址</title>
+      <link>https://yobyzal.github.io/2019/how-to-assign-multiple-ip-addresses-to-single-network-card-in-linux/</link>
       <pubDate>Tue, 03 Sep 2019 08:24:57 +0800</pubDate>
       
-      <guid>https://yobyzal.github.io/posts/how-to-assign-multiple-ip-addresses-to-single-network-card-in-linux/</guid>
+      <guid>https://yobyzal.github.io/2019/how-to-assign-multiple-ip-addresses-to-single-network-card-in-linux/</guid>
       <description>转载：How To Assign Multiple IP Addresses To Single Network Card In Linux
  Some of you might wondering why would we assign multiple IP addresses to single Network card. There can be many reasons. Say for example, you are doing some testing on your Linux box that requires two or more network cards. Would you buy new one? No, It is not necessary! You can set multiple IP series, for example 192.</description>
     </item>
     
     <item>
       <title>编写 &#34;ViewModelBase&#34; in MVVM (WPF)</title>
-      <link>https://yobyzal.github.io/posts/how-to-write-viewmodelbase/</link>
+      <link>https://yobyzal.github.io/2019/how-to-write-viewmodelbase/</link>
       <pubDate>Mon, 02 Sep 2019 16:34:24 +0800</pubDate>
       
-      <guid>https://yobyzal.github.io/posts/how-to-write-viewmodelbase/</guid>
+      <guid>https://yobyzal.github.io/2019/how-to-write-viewmodelbase/</guid>
       <description>这篇博文记录如何编写 MVVM 模式中 ViewModelBase 类。
  ViewModelBase 类是所有视图模型的基类，可以包含一些通用逻辑； ViewModelBase 类需要继承 INotifyPropertyChanged 接口以便通知视图做出变更；
 public abstract class ViewModelBase : INotifyPropertyChanged { public event PropertyChangedEventHandler PropertyChanged; protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); } }   代码中，[CallerMemberName] 特性使方法调用更加简单，只需要写明 OnPropertyChanged() 即可。如果不使用这个特性，就需要写成以下两种形式之一：

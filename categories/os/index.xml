@@ -12,11 +12,11 @@
     
     
     <item>
-      <title>【转载】如何在Linux下为单网卡配置多个IP地址</title>
-      <link>https://yobyzal.github.io/posts/how-to-assign-multiple-ip-addresses-to-single-network-card-in-linux/</link>
+      <title>[转载]如何在Linux下为单网卡配置多个IP地址</title>
+      <link>https://yobyzal.github.io/2019/how-to-assign-multiple-ip-addresses-to-single-network-card-in-linux/</link>
       <pubDate>Tue, 03 Sep 2019 08:24:57 +0800</pubDate>
       
-      <guid>https://yobyzal.github.io/posts/how-to-assign-multiple-ip-addresses-to-single-network-card-in-linux/</guid>
+      <guid>https://yobyzal.github.io/2019/how-to-assign-multiple-ip-addresses-to-single-network-card-in-linux/</guid>
       <description>转载：How To Assign Multiple IP Addresses To Single Network Card In Linux
  Some of you might wondering why would we assign multiple IP addresses to single Network card. There can be many reasons. Say for example, you are doing some testing on your Linux box that requires two or more network cards. Would you buy new one? No, It is not necessary! You can set multiple IP series, for example 192.</description>
     </item>

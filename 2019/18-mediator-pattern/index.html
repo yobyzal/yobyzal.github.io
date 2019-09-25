@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="yobyzal">
+  <meta name="description" content="yobyzal的网络笔记">
+  
+  
+  <link rel="prev" href="https://yobyzal.github.io/2019/19-memento-pattern/" />
+  <link rel="next" href="https://yobyzal.github.io/2019/17-iterator-pattern/" />
+  <link rel="canonical" href="https://yobyzal.github.io/2019/18-mediator-pattern/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           18 - 中介者模式 | yobyzal的网络笔记
+       
+  </title>
+  <meta name="title" content="18 - 中介者模式 | yobyzal的网络笔记">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "https:\/\/yobyzal.github.io\/"
+    },
+    "articleSection" : "posts",
+    "name" : "18 - 中介者模式",
+    "headline" : "18 - 中介者模式",
+    "description" : "目录 中介者模式-Mediator Pattern 客户信息管理窗口的初始设计 中介者模式概述 完整解决方案 中介者与同事类的扩展 中介者模式总结         本文整理自：https:\/\/blog.csdn.net\/lovelion\/article\/details\/17517213，在此仅作整理学习。     中介者模式-Mediator Pattern 腾讯公司推出的QQ作为一款免费的即时聊天软件深受广大用户的喜爱，它已经成为很多人学习、工作和生活的一部分（不要告诉我你没有QQ哦，吐舌头）。在QQ聊天中，一般有两种聊天方式：第一种是用户与用户直接聊天，第二种是通过QQ群聊天，如图20-1所示。如果我们使用图20-1(A)所示方式，一个用户如果要与别的用户聊天或发送文件，通常需要加其他用户为好友，用户与用户之间存在多对多的联系，这将导致系统中用户之间的关系非常复杂，一个用户如果要将相同的信息或文件发送给其他所有用户，必须一个一个的发送，于是QQ群产生了，如图20-1(B)所示，如果使用QQ群，一个用户就可以向多个用户发送相同的信息和文件而无须一一进行发送，只需要将信息或文件发送到群中或作为群共享即可，群的作用就是将发送者所发送的信息和文件转发给每一个接收者用户。通过引入群的机制，将极大减少系统中用户之间的两两通信，用户与用户之间的联系可以通过群来实现。\n   在有些软件中，某些类\/对象之间的相互调用关系错综复杂，类似QQ用户之间的关系，此时，我们特别需要一个类似“QQ群”一样的中间类来协调这些类\/对象之间的复杂关系，以降低系统的耦合度。有一个设计模式正为此而诞生，它就是本章将要介绍的中介者模式。\n 客户信息管理窗口的初始设计 Sunny软件公司欲开发一套CRM系统，其中包含一个客户信息管理模块，所设计的“客户信息管理窗口”界面效果图如图20-2所示：\n   Sunny公司开发人员通过分析发现，在图20-2中，界面组件之间存在较为复杂的交互关系：如果删除一个客户，要在客户列表(List)中删掉对应的项，客户选择组合框(ComboBox)中客户名称也将减少一个；如果增加一个客户信息，客户列表中需增加一个客户，且组合框中也将增加一项。\n 如果实现界面组件之间的交互是Sunny公司开发人员必须面对的一个问题？\n Sunny公司开发人员对组件之间的交互关系进行了分析，结果如下：\n  当用户单击“增加”按钮、“删除”按钮、“修改”按钮或“查询”按钮时，界面左侧的“客户选择组合框”、“客户列表”以及界面中的文本框将产生响应。\n  当用户通过“客户选择组合框”选中某个客户姓名时，“客户列表”和文本框将产生响应。\n  当用户通过“客户列表”选中某个客户姓名时，“客户选择组合框”和文本框将产生响应。\n   于是，Sunny公司开发人员根据组件之间的交互关系绘制了如图20-3所示初始类图：\n   与类图20-3所对应的框架代码片段如下：\n \/\/按钮类 class Button { private List list; private ComboBox cb; private TextBox tb; .",
+    "inLanguage" : "zh-cn",
+    "author" : "yobyzal",
+    "creator" : "yobyzal",
+    "publisher": "yobyzal",
+    "accountablePerson" : "yobyzal",
+    "copyrightHolder" : "yobyzal",
+    "copyrightYear" : "2019",
+    "datePublished": "2019-09-25 11:34:24 \x2b0800 CST",
+    "dateModified" : "2019-09-25 11:34:24 \x2b0800 CST",
+    "url" : "https:\/\/yobyzal.github.io\/2019\/18-mediator-pattern\/",
+    "wordCount" : "659",
+    "keywords" : [ "设计模式", "yobyzal的网络笔记"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://yobyzal.github.io/">yobyzal的网络笔记</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://yobyzal.github.io/">yobyzal的网络笔记</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">18 - 中介者模式</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="https://yobyzal.github.io/" rel="author">yobyzal</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2019-09-25 itemprop="datePublished">September 25, 2019</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="https://yobyzal.github.io/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"> 设计模式 </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <div id="toc" class="toc">
+<div id="toctitle">目录</div>
+<ul class="sectlevel1">
+<li><a href="#_中介者模式_mediator_pattern">中介者模式-Mediator Pattern</a>
+<ul class="sectlevel2">
+<li><a href="#_客户信息管理窗口的初始设计">客户信息管理窗口的初始设计</a></li>
+<li><a href="#_中介者模式概述">中介者模式概述</a></li>
+<li><a href="#_完整解决方案">完整解决方案</a></li>
+<li><a href="#_中介者与同事类的扩展">中介者与同事类的扩展</a></li>
+<li><a href="#_中介者模式总结">中介者模式总结</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+本文整理自：https://blog.csdn.net/lovelion/article/details/17517213，在此仅作整理学习。
+</td>
+</tr>
+</table>
+</div>
+<div class="sect1">
+<h2 id="_中介者模式_mediator_pattern">中介者模式-Mediator Pattern</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>腾讯公司推出的QQ作为一款免费的即时聊天软件深受广大用户的喜爱，它已经成为很多人学习、工作和生活的一部分（不要告诉我你没有QQ哦，吐舌头）。在QQ聊天中，一般有两种聊天方式：第一种是用户与用户直接聊天，第二种是通过QQ群聊天，如图20-1所示。如果我们使用图20-1(A)所示方式，一个用户如果要与别的用户聊天或发送文件，通常需要加其他用户为好友，用户与用户之间存在多对多的联系，这将导致系统中用户之间的关系非常复杂，一个用户如果要将相同的信息或文件发送给其他所有用户，必须一个一个的发送，于是QQ群产生了，如图20-1(B)所示，如果使用QQ群，一个用户就可以向多个用户发送相同的信息和文件而无须一一进行发送，只需要将信息或文件发送到群中或作为群共享即可，群的作用就是将发送者所发送的信息和文件转发给每一个接收者用户。通过引入群的机制，将极大减少系统中用户之间的两两通信，用户与用户之间的联系可以通过群来实现。</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/QQ聊天示意图.jpg" alt="QQ聊天示意图">
+</div>
+</div>
+<div class="paragraph">
+<p>在有些软件中，某些类/对象之间的相互调用关系错综复杂，类似QQ用户之间的关系，此时，我们特别需要一个类似“QQ群”一样的中间类来协调这些类/对象之间的复杂关系，以降低系统的耦合度。有一个设计模式正为此而诞生，它就是本章将要介绍的中介者模式。</p>
+</div>
+<div class="sect2">
+<h3 id="_客户信息管理窗口的初始设计">客户信息管理窗口的初始设计</h3>
+<div class="paragraph">
+<p>Sunny软件公司欲开发一套CRM系统，其中包含一个客户信息管理模块，所设计的“客户信息管理窗口”界面效果图如图20-2所示：</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/“客户信息管理窗口”界面图.jpg" alt="“客户信息管理窗口”界面图">
+</div>
+</div>
+<div class="paragraph">
+<p>Sunny公司开发人员通过分析发现，在图20-2中，界面组件之间存在较为复杂的交互关系：如果删除一个客户，要在客户列表(List)中删掉对应的项，客户选择组合框(ComboBox)中客户名称也将减少一个；如果增加一个客户信息，客户列表中需增加一个客户，且组合框中也将增加一项。</p>
+</div>
+<div class="paragraph">
+<p>如果实现界面组件之间的交互是Sunny公司开发人员必须面对的一个问题？</p>
+</div>
+<div class="paragraph">
+<p>Sunny公司开发人员对组件之间的交互关系进行了分析，结果如下：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>当用户单击“增加”按钮、“删除”按钮、“修改”按钮或“查询”按钮时，界面左侧的“客户选择组合框”、“客户列表”以及界面中的文本框将产生响应。</p>
+</li>
+<li>
+<p>当用户通过“客户选择组合框”选中某个客户姓名时，“客户列表”和文本框将产生响应。</p>
+</li>
+<li>
+<p>当用户通过“客户列表”选中某个客户姓名时，“客户选择组合框”和文本框将产生响应。</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>于是，Sunny公司开发人员根据组件之间的交互关系绘制了如图20-3所示初始类图：</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/“客户信息管理窗口”原始类图.jpg" alt="“客户信息管理窗口”原始类图">
+</div>
+</div>
+<div class="paragraph">
+<p>与类图20-3所对应的框架代码片段如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">//按钮类</span>
+<span class="type">class</span> <span class="class">Button</span>
+{
+    <span class="directive">private</span> <span class="predefined-type">List</span> list;
+    <span class="directive">private</span> ComboBox cb;
+    <span class="directive">private</span> TextBox tb;
+    ......
+
+    <span class="comment">//界面组件的交互</span>
+    public <span class="type">void</span> change()
+    {
+        list.update();
+        cb.update();
+        tb.update();
+    }
+
+    <span class="directive">public</span> <span class="type">void</span> update()
+    {
+        ......
+    }
+    ......
+}
+
+<span class="comment">//列表框类</span>
+<span class="type">class</span> <span class="class">List</span>
+{
+    <span class="directive">private</span> ComboBox cb;
+    <span class="directive">private</span> TextBox tb;
+    ......
+
+    <span class="comment">//界面组件的交互</span>
+    public <span class="type">void</span> change()
+    {
+        cb.update();
+        tb.update();
+    }
+
+    <span class="directive">public</span> <span class="type">void</span> update()
+    {
+        ......
+    }
+    ......
+}
+
+<span class="comment">//组合框类</span>
+<span class="type">class</span> <span class="class">ComboBox</span>
+{
+    <span class="directive">private</span> <span class="predefined-type">List</span> list;
+    <span class="directive">private</span> TextBox tb;
+    ......
+
+    <span class="comment">//界面组件的交互</span>
+    public <span class="type">void</span> change()
+    {
+        list.update();
+        tb.update();
+    }
+
+    <span class="directive">public</span> <span class="type">void</span> update()
+    {
+        ......
+    }
+    ......
+}
+
+<span class="comment">//文本框类</span>
+<span class="type">class</span> <span class="class">TextBox</span>
+{
+    <span class="directive">public</span> <span class="type">void</span> update()
+    {
+        ......
+    }
+    ......
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>分析图20-3所示初始结构图和上述代码，我们不难发现该设计方案存在如下问题：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>系统结构复杂且耦合度高</strong>：每一个界面组件都与多个其他组件之间产生相互关联和调用，若一个界面组件对象发生变化，需要跟踪与之有关联的其他所有组件并进行处理，系统组件之间呈现一种较为复杂的网状结构，组件之间的耦合度高。</p>
+</li>
+<li>
+<p><strong>组件的可重用性差</strong>：由于每一个组件和其他组件之间都具有很强的关联，若没有其他组件的支持，一个组件很难被另一个系统或模块重用，这些组件表现出来更像一个不可分割的整体，而在实际使用时，我们往往需要每一个组件都能够单独重用，而不是重用一个由多个组件组成的复杂结构。</p>
+</li>
+<li>
+<p><strong>系统的可扩展性差</strong>：如果在上述系统中增加一个新的组件类，则必须修改与之交互的其他组件类的源代码，将导致多个类的源代码需要修改，同样，如果要删除一个组件也存在类似的问题，这违反了“开闭原则”，可扩展性和灵活性欠佳。</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>由于存在上述问题，Sunny公司开发人员不得不对原有系统进行重构，那如何重构呢？大家想到了“迪米特法则”，<strong>引入一个“第三者”来降低现有系统中类之间的耦合度</strong>。由这个“第三者”来封装并协调原有组件两两之间复杂的引用关系，使之成为一个松耦合的系统，这个“第三者”又称为“中介者”，中介者模式因此而得名。下面让我们正式进入中介者模式的学习，学会如何使用中介者类来协调多个类/对象之间的交互，以达到降低系统耦合度的目的。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_中介者模式概述">中介者模式概述</h3>
+<div class="paragraph">
+<p>如果在一个系统中对象之间的联系呈现为网状结构，如图20-4所示。对象之间存在大量的多对多联系，将导致系统非常复杂，这些对象既会影响别的对象，也会被别的对象所影响，这些对象称为同事对象，它们之间通过彼此的相互作用实现系统的行为。在网状结构中，几乎每个对象都需要与其他对象发生相互作用，而这种相互作用表现为一个对象与另外一个对象的直接耦合，这将导致一个过度耦合的系统。</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/对象之间存在复杂关系的网状结构.jpg" alt="对象之间存在复杂关系的网状结构">
+</div>
+</div>
+<div class="paragraph">
+<p>中介者模式可以使对象之间的关系数量急剧减少，通过引入中介者对象，可以将系统的网状结构变成以中介者为中心的星形结构，如图20-5所示。在这个星形结构中，同事对象不再直接与另一个对象联系，它通过中介者对象与另一个对象发生相互作用。中介者对象的存在保证了对象结构上的稳定，也就是说，系统的结构不会因为新对象的引入带来大量的修改工作。</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/引入中介者对象的星型结构.jpg" alt="引入中介者对象的星型结构">
+</div>
+</div>
+<div class="paragraph">
+<p>如果在一个系统中对象之间存在多对多的相互关系，我们可以将对象之间的一些交互行为从各个对象中分离出来，并集中封装在一个中介者对象中，并由该中介者进行统一协调，这样对象之间多对多的复杂关系就转化为相对简单的一对多关系。通过引入中介者来简化对象之间的复杂交互，<strong>中介者模式是“迪米特法则”的一个典型应用</strong>。</p>
+</div>
+<div class="paragraph">
+<p>中介者模式定义如下：</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+中介者模式(Mediator Pattern)：用一个中介对象（中介者）来封装一系列的对象交互，中介者使各对象不需要显式地相互引用，从而使其耦合松散，而且可以独立地改变它们之间的交互。中介者模式又称为调停者模式，它是一种对象行为型模式。
+</blockquote>
+</div>
+<div class="paragraph">
+<p>在中介者模式中，我们引入了用于协调其他对象/类之间相互调用的中介者类，为了让系统具有更好的灵活性和可扩展性，通常还提供了抽象中介者，其结构图如图20-6所示：</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/中介者模式结构图.jpg" alt="中介者模式结构图">
+</div>
+</div>
+<div class="paragraph">
+<p>在中介者模式结构图中包含如下几个角色：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Mediator（抽象中介者）：它定义一个接口，该接口用于与各同事对象之间进行通信。</p>
+</li>
+<li>
+<p>ConcreteMediator（具体中介者）：它是抽象中介者的子类，通过协调各个同事对象来实现协作行为，它维持了对各个同事对象的引用。</p>
+</li>
+<li>
+<p>Colleague（抽象同事类）：它定义各个同事类公有的方法，并声明了一些抽象方法来供子类实现，同时它维持了一个对抽象中介者类的引用，其子类可以通过该引用来与中介者通信。</p>
+</li>
+<li>
+<p>ConcreteColleague（具体同事类）：它是抽象同事类的子类；每一个同事对象在需要和其他同事对象通信时，先与中介者通信，通过中介者来间接完成与其他同事类的通信；在具体同事类中实现了在抽象同事类中声明的抽象方法。</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>中介者模式的核心在于中介者类的引入，在中介者模式中，中介者类承担了两方面的职责：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>中转作用（结构性）：通过中介者提供的中转作用，各个同事对象就不再需要显式引用其他同事，当需要和其他同事进行通信时，可通过中介者来实现间接调用。该中转作用属于中介者在结构上的支持。</p>
+</li>
+<li>
+<p>协调作用（行为性）：中介者可以更进一步的对同事之间的关系进行封装，同事可以一致的和中介者进行交互，而不需要指明中介者需要具体怎么做，中介者根据封装在自身内部的协调逻辑，对同事的请求进行进一步处理，将同事成员之间的关系行为进行分离和封装。该协调作用属于中介者在行为上的支持。</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>在中介者模式中，典型的抽象中介者类代码如下所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">abstract</span> <span class="type">class</span> <span class="class">Mediator</span>
+{
+    <span class="directive">protected</span> <span class="predefined-type">ArrayList</span>&lt;Colleague&gt; colleagues; <span class="comment">//用于存储同事对象</span>
+
+    <span class="comment">//注册方法，用于增加同事对象</span>
+    <span class="directive">public</span> <span class="type">void</span> register(Colleague colleague)
+    {
+        colleagues.add(colleague);
+    }
+
+    <span class="comment">//声明抽象的业务方法</span>
+    <span class="directive">public</span> <span class="directive">abstract</span> <span class="type">void</span> operation();
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>在抽象中介者中可以定义一个同事类的集合，用于存储同事对象并提供注册方法，同时声明了具体中介者类所具有的方法。在具体中介者类中将实现这些抽象方法，典型的具体中介者类代码如下所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">ConcreteMediator</span> <span class="directive">extends</span> Mediator
+{
+    <span class="comment">//实现业务方法，封装同事之间的调用</span>
+    <span class="directive">public</span> <span class="type">void</span> operation()
+    {
+        ......
+        ((Colleague)(colleagues.get(<span class="integer">0</span>))).method1(); <span class="comment">//通过中介者调用同事类的方法</span>
+        ......
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>在具体中介者类中将调用同事类的方法，调用时可以增加一些自己的业务代码对调用进行控制。</p>
+</div>
+<div class="paragraph">
+<p>在抽象同事类中维持了一个抽象中介者的引用，用于调用中介者的方法，典型的抽象同事类代码如下所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">abstract</span> <span class="type">class</span> <span class="class">Colleague</span>
+{
+    <span class="directive">protected</span> Mediator mediator; <span class="comment">//维持一个抽象中介者的引用</span>
+
+    <span class="directive">public</span> Colleague(Mediator mediator)
+    {
+        <span class="local-variable">this</span>.mediator = mediator;
+    }
+
+    <span class="directive">public</span> <span class="directive">abstract</span> <span class="type">void</span> method1(); <span class="comment">//声明自身方法，处理自己的行为</span>
+
+    <span class="comment">//定义依赖方法，与中介者进行通信</span>
+    <span class="directive">public</span> <span class="type">void</span> method2()
+    {
+        mediator.operation();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>在抽象同事类中声明了同事类的抽象方法，而在具体同事类中将实现这些方法，典型的具体同事类代码如下所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">ConcreteColleague</span> <span class="directive">extends</span> Colleague
+{
+    <span class="directive">public</span> ConcreteColleague(Mediator mediator)
+    {
+        <span class="local-variable">super</span>(mediator);
+    }
+
+    <span class="comment">//实现自身方法</span>
+    <span class="directive">public</span> <span class="type">void</span> method1()
+    {
+        ......
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>在具体同事类ConcreteColleague中实现了在抽象同事类中声明的方法，其中方法method1()是同事类的<strong>自身方法(Self-Method)</strong>，用于处理自己的行为，而方法method2()是<strong>依赖方法(Depend-Method)</strong>，用于调用在中介者中定义的方法，依赖中介者来完成相应的行为，例如调用另一个同事类的相关方法。</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+如何理解同事类中的自身方法与依赖方法？
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_完整解决方案">完整解决方案</h3>
+<div class="paragraph">
+<p>为了协调界面组件对象之间的复杂交互关系，Sunny公司开发人员使用中介者模式来设计客户信息管理窗口，其结构示意图如图20-7所示：</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/引入了中介者类的“客户信息管理窗口”结构示意图.jpg" alt="引入了中介者类的“客户信息管理窗口”结构示意图">
+</div>
+</div>
+<div class="paragraph">
+<p>图20-7只是一个重构之后的结构示意图，在具体实现时，为了确保系统具有更好的灵活性和可扩展性，我们需要定义抽象中介者和抽象组件类，其中抽象组件类是所有具体组件类的公共父类，完整类图如图20-8所示：</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/重构后的“客户信息管理窗口”结构图.jpg" alt="重构后的“客户信息管理窗口”结构图">
+</div>
+</div>
+<div class="paragraph">
+<p>在图20-8中，Component充当抽象同事类，Button、List、ComboBox和TextBox充当具体同事类，Mediator充当抽象中介者类，ConcreteMediator充当具体中介者类，ConcreteMediator维持了对具体同事类的引用，为了简化ConcreteMediator类的代码，我们在其中只定义了一个Button对象和一个TextBox对象。完整代码如下所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">//抽象中介者</span>
+<span class="directive">abstract</span> <span class="type">class</span> <span class="class">Mediator</span>
+{
+    <span class="directive">public</span> <span class="directive">abstract</span> <span class="type">void</span> componentChanged(<span class="predefined-type">Component</span> c);
+}
+
+<span class="comment">//具体中介者</span>
+<span class="type">class</span> <span class="class">ConcreteMediator</span> <span class="directive">extends</span> Mediator
+{
+    <span class="comment">//维持对各个同事对象的引用</span>
+    <span class="directive">public</span> <span class="predefined-type">Button</span> addButton;
+    <span class="directive">public</span> <span class="predefined-type">List</span> list;
+    <span class="directive">public</span> TextBox userNameTextBox;
+    <span class="directive">public</span> ComboBox cb;
+
+    <span class="comment">//封装同事对象之间的交互</span>
+    <span class="directive">public</span> <span class="type">void</span> componentChanged(<span class="predefined-type">Component</span> c)
+    {
+        <span class="comment">//单击按钮</span>
+        <span class="keyword">if</span>(c == addButton)
+        {
+            <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">--单击增加按钮--</span><span class="delimiter">&quot;</span></span>);
+            list.update();
+            cb.update();
+            userNameTextBox.update();
+        }
+        <span class="comment">//从列表框选择客户</span>
+        <span class="keyword">else</span> <span class="keyword">if</span>(c == list)
+        {
+            <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">--从列表框选择客户--</span><span class="delimiter">&quot;</span></span>);
+            cb.select();
+            userNameTextBox.setText();
+        }
+        <span class="comment">//从组合框选择客户</span>
+        <span class="keyword">else</span> <span class="keyword">if</span>(c == cb)
+        {
+            <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">--从组合框选择客户--</span><span class="delimiter">&quot;</span></span>);
+            cb.select();
+            userNameTextBox.setText();
+        }
+    }
+}
+
+<span class="comment">//抽象组件类：抽象同事类</span>
+<span class="directive">abstract</span> <span class="type">class</span> <span class="class">Component</span>
+{
+    <span class="directive">protected</span> Mediator mediator;
+
+    <span class="directive">public</span> <span class="type">void</span> setMediator(Mediator mediator)
+    {
+        <span class="local-variable">this</span>.mediator = mediator;
+    }
+
+    <span class="comment">//转发调用</span>
+    <span class="directive">public</span> <span class="type">void</span> changed()
+    {
+        mediator.componentChanged(<span class="local-variable">this</span>);
+    }
+
+    <span class="directive">public</span> <span class="directive">abstract</span> <span class="type">void</span> update();
+}
+
+<span class="comment">//按钮类：具体同事类</span>
+<span class="type">class</span> <span class="class">Button</span> <span class="directive">extends</span> <span class="predefined-type">Component</span>
+{
+    <span class="directive">public</span> <span class="type">void</span> update()
+    {
+        <span class="comment">//按钮不产生交互</span>
+    }
+}
+
+<span class="comment">//列表框类：具体同事类</span>
+<span class="type">class</span> <span class="class">List</span> <span class="directive">extends</span> <span class="predefined-type">Component</span>
+{
+    <span class="directive">public</span> <span class="type">void</span> update()
+    {
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">列表框增加一项：张无忌。</span><span class="delimiter">&quot;</span></span>);
+    }
+
+    <span class="directive">public</span> <span class="type">void</span> select()
+    {
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">列表框选中项：小龙女。</span><span class="delimiter">&quot;</span></span>);
+    }
+}
+
+<span class="comment">//组合框类：具体同事类</span>
+<span class="type">class</span> <span class="class">ComboBox</span> <span class="directive">extends</span> <span class="predefined-type">Component</span>
+{
+    <span class="directive">public</span> <span class="type">void</span> update()
+    {
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">组合框增加一项：张无忌。</span><span class="delimiter">&quot;</span></span>);
+    }
+
+    <span class="directive">public</span> <span class="type">void</span> select()
+    {
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">组合框选中项：小龙女。</span><span class="delimiter">&quot;</span></span>);
+    }
+}
+
+<span class="comment">//文本框类：具体同事类</span>
+<span class="type">class</span> <span class="class">TextBox</span> <span class="directive">extends</span> <span class="predefined-type">Component</span>
+{
+    <span class="directive">public</span> <span class="type">void</span> update()
+    {
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">客户信息增加成功后文本框清空。</span><span class="delimiter">&quot;</span></span>);
+    }
+
+    <span class="directive">public</span> <span class="type">void</span> setText()
+    {
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">文本框显示：小龙女。</span><span class="delimiter">&quot;</span></span>);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>编写如下客户端测试代码：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">Client</span>
+{
+    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main(<span class="predefined-type">String</span> args<span class="type">[]</span>)
+    {
+        <span class="comment">//定义中介者对象</span>
+        ConcreteMediator mediator;
+        mediator = <span class="keyword">new</span> ConcreteMediator();
+
+        <span class="comment">//定义同事对象</span>
+        <span class="predefined-type">Button</span> addBT = <span class="keyword">new</span> <span class="predefined-type">Button</span>();
+        <span class="predefined-type">List</span> list = <span class="keyword">new</span> <span class="predefined-type">List</span>();
+        ComboBox cb = <span class="keyword">new</span> ComboBox();
+        TextBox userNameTB = <span class="keyword">new</span> TextBox();
+
+        addBT.setMediator(mediator);
+        list.setMediator(mediator);
+        cb.setMediator(mediator);
+        userNameTB.setMediator(mediator);
+
+        mediator.addButton = addBT;
+        mediator.list = list;
+        mediator.cb = cb;
+        mediator.userNameTextBox = userNameTB;
+
+        addBT.changed();
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">-----------------------------</span><span class="delimiter">&quot;</span></span>);
+        list.changed();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>编译并运行程序，输出结果如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>--单击增加按钮--
+列表框增加一项：张无忌。
+组合框增加一项：张无忌。
+客户信息增加成功后文本框清空。
+-----------------------------
+--从列表框选择客户--
+组合框选中项：小龙女。
+文本框显示：小龙女。</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_中介者与同事类的扩展">中介者与同事类的扩展</h3>
+<div class="paragraph">
+<p>Sunny软件公司CRM系统的客户对“客户信息管理窗口”提出了一个修改意见：要求在窗口的下端能够及时显示当前系统中客户信息的总数。修改之后的界面如图20-9所示：</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/修改之后的“客户信息管理窗口”界面图.jpg" alt="修改之后的“客户信息管理窗口”界面图">
+</div>
+</div>
+<div class="paragraph">
+<p>从图20-9中我们不难发现，可以通过增加一个文本标签(Label)来显示客户信息总数，而且当用户点击“增加”按钮或者“删除”按钮时，将改变文本标签的内容。</p>
+</div>
+<div class="paragraph">
+<p>由于使用了中介者模式，在原有系统中增加新的组件（即新的同事类）将变得很容易，我们至少有如下两种解决方案：</p>
+</div>
+<div class="paragraph">
+<p>【解决方案一】增加一个界面组件类Label，修改原有的具体中介者类ConcreteMediator，增加一个对Label对象的引用，然后修改componentChanged()方法中其他相关组件对象的业务处理代码，原有组件类无须任何修改，客户端代码也需针对新增组件Label进行适当修改。</p>
+</div>
+<div class="paragraph">
+<p>【解决方案二】与方案一相同，首先增加一个Label类，但不修改原有具体中介者类ConcreteMediator的代码，而是增加一个ConcreteMediator的子类SubConcreteMediator来实现对Label对象的引用，然后在新增的中介者类SubConcreteMediator中通过覆盖componentChanged()方法来实现所有组件（包括新增Label组件）之间的交互，同样，原有组件类无须做任何修改，客户端代码需少许修改。</p>
+</div>
+<div class="paragraph">
+<p>引入Label之后“客户信息管理窗口”类结构示意图如图20-10所示：</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/增加Label组件类后的“客户信息管理窗口”结构示意图.jpg" alt="增加Label组件类后的“客户信息管理窗口”结构示意图">
+</div>
+</div>
+<div class="paragraph">
+<p>由于【解决方案二】无须修改ConcreteMediator类，更符合“开闭原则”，因此我们选择该解决方案来对新增Label类进行处理，对应的完整类图如图20-11所示：</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/修改之后的“客户信息管理窗口”结构图.jpg" alt="修改之后的“客户信息管理窗口”结构图">
+</div>
+</div>
+<div class="paragraph">
+<p>在图20-11中，新增了具体同事类Label和具体中介者类SubConcreteMediator，代码如下所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">//文本标签类：具体同事类</span>
+<span class="type">class</span> <span class="class">Label</span> <span class="directive">extends</span> <span class="predefined-type">Component</span>
+{
+    <span class="directive">public</span> <span class="type">void</span> update()
+    {
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">文本标签内容改变，客户信息总数加1。</span><span class="delimiter">&quot;</span></span>);
+    }
+}
+
+<span class="comment">//新增具体中介者类</span>
+<span class="type">class</span> <span class="class">SubConcreteMediator</span> <span class="directive">extends</span> ConcreteMediator
+{
+    <span class="comment">//增加对Label对象的引用</span>
+    <span class="directive">public</span> <span class="predefined-type">Label</span> label;
+
+    <span class="directive">public</span> <span class="type">void</span> componentChanged(<span class="predefined-type">Component</span> c)
+    {
+        <span class="comment">//单击按钮</span>
+        <span class="keyword">if</span>(c == addButton)
+        {
+            <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">--单击增加按钮--</span><span class="delimiter">&quot;</span></span>);
+            list.update();
+            cb.update();
+            userNameTextBox.update();
+            label.update(); <span class="comment">//文本标签更新</span>
+        }
+        <span class="comment">//从列表框选择客户</span>
+        <span class="keyword">else</span> <span class="keyword">if</span>(c == list)
+        {
+            <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">--从列表框选择客户--</span><span class="delimiter">&quot;</span></span>);
+            cb.select();
+            userNameTextBox.setText();
+        }
+        <span class="comment">//从组合框选择客户</span>
+        <span class="keyword">else</span> <span class="keyword">if</span>(c == cb)
+        {
+            <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">--从组合框选择客户--</span><span class="delimiter">&quot;</span></span>);
+            cb.select();
+            userNameTextBox.setText();
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>修改客户端测试代码：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">Client</span>
+{
+    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main(<span class="predefined-type">String</span> args<span class="type">[]</span>)
+    {
+        <span class="comment">//用新增具体中介者定义中介者对象</span>
+        SubConcreteMediator mediator;
+        mediator = <span class="keyword">new</span> SubConcreteMediator();
+
+        <span class="predefined-type">Button</span> addBT = <span class="keyword">new</span> <span class="predefined-type">Button</span>();
+        <span class="predefined-type">List</span> list = <span class="keyword">new</span> <span class="predefined-type">List</span>();
+        ComboBox cb = <span class="keyword">new</span> ComboBox();
+        TextBox userNameTB = <span class="keyword">new</span> TextBox();
+        <span class="predefined-type">Label</span> label = <span class="keyword">new</span> <span class="predefined-type">Label</span>();
+
+        addBT.setMediator(mediator);
+        list.setMediator(mediator);
+        cb.setMediator(mediator);
+        userNameTB.setMediator(mediator);
+        label.setMediator(mediator);
+
+        mediator.addButton = addBT;
+        mediator.list = list;
+        mediator.cb = cb;
+        mediator.userNameTextBox = userNameTB;
+        mediator.label = label;
+
+        addBT.changed();
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">-----------------------------</span><span class="delimiter">&quot;</span></span>);
+        list.changed();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>编译并运行程序，输出结果如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>--单击增加按钮--
+列表框增加一项：张无忌。
+组合框增加一项：张无忌。
+客户信息增加成功后文本框清空。
+文本标签内容改变，客户信息总数加1。
+-----------------------------
+--从列表框选择客户--
+组合框选中项：小龙女。
+文本框显示：小龙女。</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>由于在本实例中不同的组件类（即不同的同事类）所拥有的方法并不完全相同，因此中介者类没有针对抽象同事类编程，导致在具体中介者类中需要维持对具体同事类的引用，客户端代码无法完全透明地对待所有同事类和中介者类。在某些情况下，如果设计得当，可以在客户端透明地对同事类和中介者类编程，这样系统将具有更好的灵活性和可扩展性。</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+如果不使用中介者模式，按照图20-3所示设计方案，增加新组件时原有系统该如何修改？
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>在中介者模式的实际使用过程中，如果需要引入新的具体同事类，只需要继承抽象同事类并实现其中的方法即可，由于具体同事类之间并无直接的引用关系，因此原有所有同事类无须进行任何修改，它们与新增同事对象之间的交互可以通过修改或者增加具体中介者类来实现；如果需要在原有系统中增加新的具体中介者类，只需要继承抽象中介者类（或已有的具体中介者类）并覆盖其中定义的方法即可，在新的具体中介者中可以通过不同的方式来处理对象之间的交互，也可以增加对新增同事的引用和调用。在客户端中只需要修改少许代码（如果引入配置文件的话有时可以不修改任何代码）就可以实现中介者的更换。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_中介者模式总结">中介者模式总结</h3>
+<div class="paragraph">
+<p>中介者模式<strong>将一个网状的系统结构变成一个以中介者对象为中心的星形结构</strong>，在这个星型结构中，使用中介者对象与其他对象的一对多关系来取代原有对象之间的多对多关系。中介者模式在事件驱动类软件中应用较为广泛，特别是基于GUI（Graphical User Interface，图形用户界面）的应用软件，此外，在类与类之间存在错综复杂的关联关系的系统中，中介者模式都能得到较好的应用。</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>主要优点</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>中介者模式的主要优点如下：</p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p><strong>中介者模式简化了对象之间的交互</strong>，它用中介者和同事的一对多交互代替了原来同事之间的多对多交互，一对多关系更容易理解、维护和扩展，将原本难以理解的网状结构转换成相对简单的星型结构。</p>
+</li>
+<li>
+<p><strong>中介者模式可将各同事对象解耦</strong>。中介者有利于各同事之间的松耦合，我们可以独立的改变和复用每一个同事和中介者，增加新的中介者和新的同事类都比较方便，更好地符合“开闭原则”。</p>
+</li>
+<li>
+<p><strong>可以减少子类生成</strong>，中介者将原本分布于多个对象间的行为集中在一起，改变这些行为只需生成新的中介者子类即可，这使各个同事类可被重用，无须对同事类进行扩展。</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>主要缺点</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>中介者模式的主要缺点如下：</p>
+</div>
+<div class="paragraph">
+<p>在具体中介者类中包含了大量同事之间的交互细节，<strong>可能会导致具体中介者类非常复杂</strong>，使得系统难以维护。</p>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>适用场景</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>在以下情况下可以考虑使用中介者模式：</p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>系统中<strong>对象之间存在复杂的引用关系</strong>，系统结构混乱且难以理解。</p>
+</li>
+<li>
+<p>一个对象由于引用了其他很多对象并且直接和这些对象通信，导致<strong>难以复用该对象</strong>。</p>
+</li>
+<li>
+<p>想<strong>通过一个中间类来封装多个类中的行为，而又不想生成太多的子类</strong>。可以通过引入中介者类来实现，在中介者中定义对象交互的公共行为，如果需要改变行为则可以增加新的具体中介者类。</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Sunny软件公司欲开发一套图形界面类库。该类库需要包含若干预定义的窗格(Pane)对象，例如TextPane、ListPane、GraphicPane等，窗格之间不允许直接引用。基于该类库的应用由一个包含一组窗格的窗口(Window)组成，窗口需要协调窗格之间的行为。试采用中介者模式设计该系统。
+</td>
+</tr>
+</table>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<p>2010年上半年 软件设计师 下午试卷 第三题</p>
+</div>
+<div class="paragraph">
+<p>【说明】:某运输公司决定为新的售票机开发车票销售的控制软件。图I给出了售票机的面板示意图以及相关的控制部件。</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/售票机面板示意图.jpg" alt="售票机面板示意图">
+</div>
+</div>
+<div class="paragraph">
+<p>售票机相关部件的作用如下所述：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>目的地键盘用来输入行程目的地的代码（例如，200表示总站）。</p>
+</li>
+<li>
+<p>乘客可以通过车票键盘选择车票种类（单程票、多次往返票和座席种类）。</p>
+</li>
+<li>
+<p>继续/取消键盘上的取消按钮用于取消购票过程，继续按钮允许乘客连续购买多张票。</p>
+</li>
+<li>
+<p>显示屏显示所有的系统输出和用户提示信息。</p>
+</li>
+<li>
+<p>插卡口接受MCard（现金卡），硬币口和纸币槽接受现金。</p>
+</li>
+<li>
+<p>打印机用于输出车票。</p>
+</li>
+<li>
+<p>所有部件均可实现自检并恢复到初始状态。</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>现采用面向对象方法开发该系统，使用UML进行建模，系统的顶层用例图和类图分别如图II和图III所示。</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/顶层用例图.jpg" alt="顶层用例图">
+</div>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/类图.jpg" alt="类图">
+</div>
+</div>
+<div class="paragraph">
+<p>【问题1】:根据说明中的描述，给出图II中A1和A2所对应的执行者，U1所对应的用例，以及(1)、(2)处所对应的关系。</p>
+</div>
+<div class="paragraph">
+<p>【问题2】:根据说明中的描述，给出图III中缺少的C1-C4所对应的类名以及(3)-(6)处所对应的多重度。</p>
+</div>
+<div class="paragraph">
+<p>【问题3】:图III中的类图设计采用了<strong>中介者(Mediator)设计模式</strong>，请说明该模式的内涵。</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>yobyzal </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=https://yobyzal.github.io/2019/18-mediator-pattern/>https://yobyzal.github.io/2019/18-mediator-pattern/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="https://yobyzal.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+                    #设计模式</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="https://yobyzal.github.io/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="https://yobyzal.github.io/2019/19-memento-pattern/" class="prev" rel="prev" title="19 - 备忘录模式"><i class="iconfont icon-left"></i>&nbsp;19 - 备忘录模式</a>
+         
+        
+        <a href="https://yobyzal.github.io/2019/17-iterator-pattern/" class="next" rel="next" title="17 - 迭代器模式">17 - 迭代器模式&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2019</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="https://yobyzal.github.io/">yobyzal</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

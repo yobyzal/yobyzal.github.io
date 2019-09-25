@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="yobyzal">
+  <meta name="description" content="yobyzal的网络笔记">
+  
+  
+  <link rel="prev" href="https://yobyzal.github.io/2019/02-factory-method-pattern/" />
+  <link rel="next" href="https://yobyzal.github.io/2019/00-abstract/" />
+  <link rel="canonical" href="https://yobyzal.github.io/2019/01-simple-factory-pattern/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           01 - 简单工厂模式 | yobyzal的网络笔记
+       
+  </title>
+  <meta name="title" content="01 - 简单工厂模式 | yobyzal的网络笔记">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "https:\/\/yobyzal.github.io\/"
+    },
+    "articleSection" : "posts",
+    "name" : "01 - 简单工厂模式",
+    "headline" : "01 - 简单工厂模式",
+    "description" : "目录 简单工厂模式 - Simple Factory Pattern 图表库的设计 简单工厂模式概述 完整解决方案 方案的改进 简单工厂模式的简化 简单工厂模式总结         本文整理自：https:\/\/blog.csdn.net\/lovelion\/article\/details\/17517213，在此仅作整理学习。     简单工厂模式 - Simple Factory Pattern 工厂模式是最常用的一类创建型设计模式，通常我们所说的工厂模式是指工厂方法模式，它也是使用频率最高的工厂模式。本章将要学习的简单工厂模式是工厂方法模式的“小弟”，它不属于GoF 23种设计模式，但在软件开发中应用也较为频繁，通常将它作为学习其他工厂模式的入门。此外，工厂方法模式还有一位“大哥”——抽象工厂模式。这三种工厂模式各具特色，难度也逐个加大，在软件开发中它们都得到了广泛的应用，成为面向对象软件中常用的创建对象的工具。\n 图表库的设计 Sunny软件公司欲基于Java语言开发一套图表库，该图表库可以为应用系统提供各种不同外观的图表，例如柱状图、饼状图、折线图等。Sunny软件公司图表库设计人员希望为应用系统开发人员提供一套灵活易用的图表库，而且可以较为方便地对图表库进行扩展，以便能够在将来增加一些新类型的图表。\n Sunny软件公司图表库设计人员提出了一个初始设计方案，将所有图表的实现代码封装在一个Chart类中，其框架代码如下所示：\n class Chart { private String type; \/\/图表类型 public Chart(Object[][] data, String type) { this.type = type; if (type.equalsIgnoreCase(\x26quot;histogram\x26quot;)) { \/\/初始化柱状图 } else if (type.equalsIgnoreCase(\x26quot;pie\x26quot;)) { \/\/初始化饼状图 } else if (type.equalsIgnoreCase(\x26quot;line\x26quot;)) { \/\/初始化折线图 } } public void display() { if (this.",
+    "inLanguage" : "zh-cn",
+    "author" : "yobyzal",
+    "creator" : "yobyzal",
+    "publisher": "yobyzal",
+    "accountablePerson" : "yobyzal",
+    "copyrightHolder" : "yobyzal",
+    "copyrightYear" : "2019",
+    "datePublished": "2019-09-25 11:34:24 \x2b0800 CST",
+    "dateModified" : "2019-09-25 11:34:24 \x2b0800 CST",
+    "url" : "https:\/\/yobyzal.github.io\/2019\/01-simple-factory-pattern\/",
+    "wordCount" : "459",
+    "keywords" : [ "设计模式", "yobyzal的网络笔记"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://yobyzal.github.io/">yobyzal的网络笔记</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://yobyzal.github.io/">yobyzal的网络笔记</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">01 - 简单工厂模式</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="https://yobyzal.github.io/" rel="author">yobyzal</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2019-09-25 itemprop="datePublished">September 25, 2019</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="https://yobyzal.github.io/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"> 设计模式 </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <div id="toc" class="toc">
+<div id="toctitle">目录</div>
+<ul class="sectlevel1">
+<li><a href="#_简单工厂模式_simple_factory_pattern">简单工厂模式 - Simple Factory Pattern</a>
+<ul class="sectlevel2">
+<li><a href="#_图表库的设计">图表库的设计</a></li>
+<li><a href="#_简单工厂模式概述">简单工厂模式概述</a></li>
+<li><a href="#_完整解决方案">完整解决方案</a></li>
+<li><a href="#_方案的改进">方案的改进</a></li>
+<li><a href="#_简单工厂模式的简化">简单工厂模式的简化</a></li>
+<li><a href="#_简单工厂模式总结">简单工厂模式总结</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+本文整理自：https://blog.csdn.net/lovelion/article/details/17517213，在此仅作整理学习。
+</td>
+</tr>
+</table>
+</div>
+<div class="sect1">
+<h2 id="_简单工厂模式_simple_factory_pattern">简单工厂模式 - Simple Factory Pattern</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>工厂模式是最常用的一类创建型设计模式，通常我们所说的工厂模式是指工厂方法模式，它也是使用频率最高的工厂模式。本章将要学习的简单工厂模式是工厂方法模式的“小弟”，它不属于GoF 23种设计模式，但在软件开发中应用也较为频繁，通常将它作为学习其他工厂模式的入门。此外，工厂方法模式还有一位“大哥”——抽象工厂模式。这三种工厂模式各具特色，难度也逐个加大，在软件开发中它们都得到了广泛的应用，成为面向对象软件中常用的创建对象的工具。</p>
+</div>
+<div class="sect2">
+<h3 id="_图表库的设计">图表库的设计</h3>
+<div class="paragraph">
+<p>Sunny软件公司欲基于Java语言开发一套图表库，该图表库可以为应用系统提供各种不同外观的图表，例如柱状图、饼状图、折线图等。Sunny软件公司图表库设计人员希望为应用系统开发人员提供一套灵活易用的图表库，而且可以较为方便地对图表库进行扩展，以便能够在将来增加一些新类型的图表。</p>
+</div>
+<div class="paragraph">
+<p>Sunny软件公司图表库设计人员提出了一个初始设计方案，将所有图表的实现代码封装在一个Chart类中，其框架代码如下所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">Chart</span> {
+    <span class="directive">private</span> <span class="predefined-type">String</span> type; <span class="comment">//图表类型</span>
+
+    <span class="directive">public</span> Chart(<span class="predefined-type">Object</span><span class="type">[]</span><span class="type">[]</span> data, <span class="predefined-type">String</span> type) {
+        <span class="local-variable">this</span>.type = type;
+        <span class="keyword">if</span> (type.equalsIgnoreCase(<span class="string"><span class="delimiter">&quot;</span><span class="content">histogram</span><span class="delimiter">&quot;</span></span>)) {
+            <span class="comment">//初始化柱状图</span>
+        }
+        <span class="keyword">else</span> <span class="keyword">if</span> (type.equalsIgnoreCase(<span class="string"><span class="delimiter">&quot;</span><span class="content">pie</span><span class="delimiter">&quot;</span></span>)) {
+            <span class="comment">//初始化饼状图</span>
+        }
+        <span class="keyword">else</span> <span class="keyword">if</span> (type.equalsIgnoreCase(<span class="string"><span class="delimiter">&quot;</span><span class="content">line</span><span class="delimiter">&quot;</span></span>)) {
+            <span class="comment">//初始化折线图</span>
+        }
+    }
+
+    <span class="directive">public</span> <span class="type">void</span> display() {
+        <span class="keyword">if</span> (<span class="local-variable">this</span>.type.equalsIgnoreCase(<span class="string"><span class="delimiter">&quot;</span><span class="content">histogram</span><span class="delimiter">&quot;</span></span>)) {
+            <span class="comment">//显示柱状图</span>
+        }
+        <span class="keyword">else</span> <span class="keyword">if</span> (<span class="local-variable">this</span>.type.equalsIgnoreCase(<span class="string"><span class="delimiter">&quot;</span><span class="content">pie</span><span class="delimiter">&quot;</span></span>)) {
+            <span class="comment">//显示饼状图</span>
+        }
+        <span class="keyword">else</span> <span class="keyword">if</span> (<span class="local-variable">this</span>.type.equalsIgnoreCase(<span class="string"><span class="delimiter">&quot;</span><span class="content">line</span><span class="delimiter">&quot;</span></span>)) {
+            <span class="comment">//显示折线图</span>
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>客户端代码通过调用Chart类的构造函数来创建图表对象，根据参数type的不同可以得到不同类型的图表，然后再调用display()方法来显示相应的图表。</p>
+</div>
+<div class="paragraph">
+<p>不难看出，Chart类是一个“巨大的”类，在该类的设计中存在如下几个问题：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>在Chart类中包含很多“if…else…”代码块，整个类的代码相当冗长，代码越长，阅读难度、维护难度和测试难度也越大；而且大量条件语句的存在还将影响系统的性能，程序在执行过程中需要做大量的条件判断。</p>
+</li>
+<li>
+<p>Chart类的职责过重，它负责初始化和显示所有的图表对象，将各种图表对象的初始化代码和显示代码集中在一个类中实现，违反了“单一职责原则”，不利于类的重用和维护；而且将大量的对象初始化代码都写在构造函数中将导致构造函数非常庞大，对象在创建时需要进行条件判断，降低了对象创建的效率。</p>
+</li>
+<li>
+<p>当需要增加新类型的图表时，必须修改Chart类的源代码，违反了“开闭原则”。</p>
+</li>
+<li>
+<p>客户端只能通过new关键字来直接创建Chart对象，Chart类与客户端类耦合度较高，对象的创建和使用无法分离。</p>
+</li>
+<li>
+<p>客户端在创建Chart对象之前可能还需要进行大量初始化设置，例如设置柱状图的颜色、高度等，如果在Chart类的构造函数中没有提供一个默认设置，那就只能由客户端来完成初始设置，这些代码在每次创建Chart对象时都会出现，导致代码的重复。</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>面对一个如此巨大、职责如此重，且与客户端代码耦合度非常高的类，我们应该怎么办？本章将要介绍的简单工厂模式将在一定程度上解决上述问题。</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+为什么要引入工厂类，大家可参见：<a href="http://blog.csdn.net/lovelion/article/details/7523392">创建对象与使用对象——谈谈工厂的作用</a>。
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_简单工厂模式概述">简单工厂模式概述</h3>
+<div class="paragraph">
+<p>简单工厂模式并不属于GoF 23个经典设计模式，但通常将它作为学习其他工厂模式的基础，它的设计思想很简单，其基本流程如下：</p>
+</div>
+<div class="paragraph">
+<p>首先将需要创建的各种不同对象（例如各种不同的Chart对象）的相关代码封装到不同的类中，这些类称为具体产品类，而将它们公共的代码进行抽象和提取后封装在一个抽象产品类中，每一个具体产品类都是抽象产品类的子类；然后提供一个工厂类用于创建各种产品，在工厂类中提供一个创建产品的工厂方法，该方法可以根据所传入的参数不同创建不同的具体产品对象；客户端只需调用工厂类的工厂方法并传入相应的参数即可得到一个产品对象。</p>
+</div>
+<div class="paragraph">
+<p>简单工厂模式定义如下：</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+简单工厂模式(Simple Factory Pattern)：定义一个工厂类，它可以根据参数的不同返回不同类的实例，被创建的实例通常都具有共同的父类。因为在简单工厂模式中用于创建实例的方法是静态(static)方法，因此简单工厂模式又被称为静态工厂方法(Static Factory Method)模式，它属于类创建型模式。
+</blockquote>
+</div>
+<div class="paragraph">
+<p>简单工厂模式的要点在于：<strong>当你需要什么，只需要传入一个正确的参数，就可以获取你所需要的对象，而无须知道其创建细节</strong>。简单工厂模式结构比较简单，其核心是工厂类的设计，其结构如图1所示：</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/简单工厂模式结构图.jpg" alt="简单工厂模式结构图">
+</div>
+</div>
+<div class="paragraph">
+<p>在简单工厂模式结构图中包含如下几个角色：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Factory（工厂角色）：工厂角色即工厂类，它是简单工厂模式的核心，负责实现创建所有产品实例的内部逻辑；工厂类可以被外界直接调用，创建所需的产品对象；在工厂类中提供了静态的工厂方法factoryMethod()，它的返回类型为抽象产品类型Product。</p>
+</li>
+<li>
+<p>Product（抽象产品角色）：它是工厂类所创建的所有对象的父类，封装了各种产品对象的公有方法，它的引入将提高系统的灵活性，使得在工厂类中只需定义一个通用的工厂方法，因为所有创建的具体产品对象都是其子类对象。</p>
+</li>
+<li>
+<p>ConcreteProduct（具体产品角色）：它是简单工厂模式的创建目标，所有被创建的对象都充当这个角色的某个具体类的实例。每一个具体产品角色都继承了抽象产品角色，需要实现在抽象产品中声明的抽象方法。</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>在简单工厂模式中，客户端通过工厂类来创建一个产品类的实例，而无须直接使用new关键字来创建对象，它是工厂模式家族中最简单的一员。</p>
+</div>
+<div class="paragraph">
+<p>在使用简单工厂模式时，首先需要对产品类进行重构，不能设计一个包罗万象的产品类，而需根据实际情况设计一个产品层次结构，将所有产品类公共的代码移至抽象产品类，并在抽象产品类中声明一些抽象方法，以供不同的具体产品类来实现，典型的抽象产品类代码如下所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">abstract</span> <span class="type">class</span> <span class="class">Product</span> {
+    <span class="comment">//所有产品类的公共业务方法</span>
+    <span class="directive">public</span> <span class="type">void</span> methodSame() {
+        <span class="comment">//公共方法的实现</span>
+    }
+
+    <span class="comment">//声明抽象业务方法</span>
+    <span class="directive">public</span> <span class="directive">abstract</span> <span class="type">void</span> methodDiff();
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>在具体产品类中实现了抽象产品类中声明的抽象业务方法，不同的具体产品类可以提供不同的实现，典型的具体产品类代码如下所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">ConcreteProduct</span> <span class="directive">extends</span> Product {
+    <span class="comment">//实现业务方法</span>
+    <span class="directive">public</span> <span class="type">void</span> methodDiff() {
+        <span class="comment">//业务方法的实现</span>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>简单工厂模式的核心是工厂类，在没有工厂类之前，客户端一般会使用new关键字来直接创建产品对象，而在引入工厂类之后，客户端可以通过工厂类来创建产品，在简单工厂模式中，工厂类提供了一个静态工厂方法供客户端使用，根据所传入的参数不同可以创建不同的产品对象，典型的工厂类代码如下所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">Factory</span> {
+    <span class="comment">//静态工厂方法</span>
+    <span class="directive">public</span> <span class="directive">static</span> Product getProduct(<span class="predefined-type">String</span> arg) {
+        Product product = ;
+        <span class="keyword">if</span> (arg.equalsIgnoreCase(<span class="string"><span class="delimiter">&quot;</span><span class="content">A</span><span class="delimiter">&quot;</span></span>)) {
+            product = <span class="keyword">new</span> ConcreteProductA();
+            <span class="comment">//初始化设置product</span>
+        }
+        <span class="keyword">else</span> <span class="keyword">if</span> (arg.equalsIgnoreCase(<span class="string"><span class="delimiter">&quot;</span><span class="content">B</span><span class="delimiter">&quot;</span></span>)) {
+            product = <span class="keyword">new</span> ConcreteProductB();
+            <span class="comment">//初始化设置product</span>
+        }
+        <span class="keyword">return</span> product;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>在客户端代码中，我们通过调用工厂类的工厂方法即可得到产品对象，典型代码如下所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">Client</span> {
+    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main(<span class="predefined-type">String</span> args<span class="type">[]</span>) {
+        Product product;
+        product = Factory.getProduct(<span class="string"><span class="delimiter">&quot;</span><span class="content">A</span><span class="delimiter">&quot;</span></span>); <span class="comment">//通过工厂类创建产品对象</span>
+        product.methodSame();
+        product.methodDiff();
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_完整解决方案">完整解决方案</h3>
+<div class="paragraph">
+<p>为了将Chart类的职责分离，同时将Chart对象的创建和使用分离，Sunny软件公司开发人员决定使用简单工厂模式对图表库进行重构，重构后的结构如图2所示：</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/图表库结构图.jpg" alt="图表库结构图">
+</div>
+</div>
+<div class="paragraph">
+<p>在图2中，Chart接口充当抽象产品类，其子类HistogramChart、PieChart和LineChart充当具体产品类，ChartFactory充当工厂类。完整代码如下所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">//抽象图表接口：抽象产品类</span>
+<span class="type">interface</span> <span class="class">Chart</span> {
+    <span class="directive">public</span> <span class="type">void</span> display();
+}
+
+<span class="comment">//柱状图类：具体产品类</span>
+<span class="type">class</span> <span class="class">HistogramChart</span> <span class="directive">implements</span> Chart {
+    <span class="directive">public</span> HistogramChart() {
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">创建柱状图！</span><span class="delimiter">&quot;</span></span>);
+    }
+
+    <span class="directive">public</span> <span class="type">void</span> display() {
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">显示柱状图！</span><span class="delimiter">&quot;</span></span>);
+    }
+}
+
+<span class="comment">//饼状图类：具体产品类</span>
+<span class="type">class</span> <span class="class">PieChart</span> <span class="directive">implements</span> Chart {
+    <span class="directive">public</span> PieChart() {
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">创建饼状图！</span><span class="delimiter">&quot;</span></span>);
+    }
+
+    <span class="directive">public</span> <span class="type">void</span> display() {
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">显示饼状图！</span><span class="delimiter">&quot;</span></span>);
+    }
+}
+
+<span class="comment">//折线图类：具体产品类</span>
+<span class="type">class</span> <span class="class">LineChart</span> <span class="directive">implements</span> Chart {
+    <span class="directive">public</span> LineChart() {
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">创建折线图！</span><span class="delimiter">&quot;</span></span>);
+    }
+
+    <span class="directive">public</span> <span class="type">void</span> display() {
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">显示折线图！</span><span class="delimiter">&quot;</span></span>);
+    }
+}
+
+<span class="comment">//图表工厂类：工厂类</span>
+<span class="type">class</span> <span class="class">ChartFactory</span> {
+    <span class="comment">//静态工厂方法</span>
+    <span class="directive">public</span> <span class="directive">static</span> Chart getChart(<span class="predefined-type">String</span> type) {
+        Chart chart = ;
+        <span class="keyword">if</span> (type.equalsIgnoreCase(<span class="string"><span class="delimiter">&quot;</span><span class="content">histogram</span><span class="delimiter">&quot;</span></span>)) {
+            chart = <span class="keyword">new</span> HistogramChart();
+            <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">初始化设置柱状图！</span><span class="delimiter">&quot;</span></span>);
+        }
+        <span class="keyword">else</span> <span class="keyword">if</span> (type.equalsIgnoreCase(<span class="string"><span class="delimiter">&quot;</span><span class="content">pie</span><span class="delimiter">&quot;</span></span>)) {
+            chart = <span class="keyword">new</span> PieChart();
+            <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">初始化设置饼状图！</span><span class="delimiter">&quot;</span></span>);
+        }
+        <span class="keyword">else</span> <span class="keyword">if</span> (type.equalsIgnoreCase(<span class="string"><span class="delimiter">&quot;</span><span class="content">line</span><span class="delimiter">&quot;</span></span>)) {
+            chart = <span class="keyword">new</span> LineChart();
+            <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">初始化设置折线图！</span><span class="delimiter">&quot;</span></span>);
+        }
+        <span class="keyword">return</span> chart;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>编写如下客户端测试代码：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">Client</span> {
+    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main(<span class="predefined-type">String</span> args<span class="type">[]</span>) {
+        Chart chart;
+        chart = ChartFactory.getChart(<span class="string"><span class="delimiter">&quot;</span><span class="content">histogram</span><span class="delimiter">&quot;</span></span>); <span class="comment">//通过静态工厂方法创建产品</span>
+        chart.display();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>编译并运行程序，输出结果如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>创建柱状图！
+初始化设置柱状图！
+显示柱状图！</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>在客户端测试类中，我们使用工厂类的静态工厂方法创建产品对象，如果需要更换产品，只需修改静态工厂方法中的参数即可，例如将柱状图改为饼状图，只需将代码： <code>chart = ChartFactory.getChart("histogram")</code> 改为： <code>chart = ChartFactory.getChart("pie")</code> ，编译并运行程序，输出结果如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>创建饼状图！
+初始化设置饼状图！
+显示饼状图！</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_方案的改进">方案的改进</h3>
+<div class="paragraph">
+<p>Sunny软件公司开发人员发现在创建具体Chart对象时，每更换一个Chart对象都需要修改客户端代码中静态工厂方法的参数，客户端代码将要重新编译，这对于客户端而言，违反了“开闭原则”，有没有一种方法能够在不修改客户端代码的前提下更换具体产品对象呢？答案是肯定的，下面将介绍一种常用的实现方式。</p>
+</div>
+<div class="paragraph">
+<p>我们可以将静态工厂方法的参数存储在XML或properties格式的配置文件中，如下config.xml所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="preprocessor">&lt;?xml version=&quot;1.0&quot;?&gt;</span>
+<span class="tag">&lt;config&gt;</span>
+    <span class="tag">&lt;chartType&gt;</span>histogram<span class="tag">&lt;/chartType&gt;</span>
+<span class="tag">&lt;/config&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>再通过一个工具类XMLUtil来读取配置文件中的字符串参数，XMLUtil类的代码如下所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">javax.xml.parsers</span>.*;
+<span class="keyword">import</span> <span class="include">org.w3c.dom</span>.*;
+<span class="keyword">import</span> <span class="include">org.xml.sax.SAXException</span>;
+<span class="keyword">import</span> <span class="include">java.io</span>.*;
+
+<span class="directive">public</span> <span class="type">class</span> <span class="class">XMLUtil</span> {
+    <span class="comment">//该方法用于从XML配置文件中提取图表类型，并返回类型名</span>
+    <span class="directive">public</span> <span class="directive">static</span> <span class="predefined-type">String</span> getChartType() {
+        <span class="keyword">try</span> {
+            <span class="comment">//创建文档对象</span>
+            <span class="predefined-type">DocumentBuilderFactory</span> dFactory = <span class="predefined-type">DocumentBuilderFactory</span>.newInstance();
+            <span class="predefined-type">DocumentBuilder</span> builder = dFactory.newDocumentBuilder();
+            <span class="predefined-type">Document</span> doc;
+            doc = builder.parse(<span class="keyword">new</span> <span class="predefined-type">File</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">config.xml</span><span class="delimiter">&quot;</span></span>));
+
+            <span class="comment">//获取包含图表类型的文本节点</span>
+            NodeList nl = doc.getElementsByTagName(<span class="string"><span class="delimiter">&quot;</span><span class="content">chartType</span><span class="delimiter">&quot;</span></span>);
+            Node classNode = nl.item(<span class="integer">0</span>).getFirstChild();
+            <span class="predefined-type">String</span> chartType = classNode.getNodeValue().trim();
+            <span class="keyword">return</span> chartType;
+        }
+        <span class="keyword">catch</span>(<span class="exception">Exception</span> e) {
+            e.printStackTrace();
+            <span class="keyword">return</span> ;
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>在引入了配置文件和工具类XMLUtil之后，客户端代码修改如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">Client</span> {
+    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main(<span class="predefined-type">String</span> args<span class="type">[]</span>) {
+        Chart chart;
+        <span class="predefined-type">String</span> type = XMLUtil.getChartType(); <span class="comment">//读取配置文件中的参数</span>
+        chart = ChartFactory.getChart(type); <span class="comment">//创建产品对象</span>
+        chart.display();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>不难发现，在上述客户端代码中不包含任何与具体图表对象相关的信息，如果需要更换具体图表对象，只需修改配置文件config.xml，无须修改任何源代码，符合“开闭原则”。</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+在简单工厂模式中增加新的具体产品时是否符合“开闭原则”？如果不符合，原有系统需作出哪些修改？
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_简单工厂模式的简化">简单工厂模式的简化</h3>
+<div class="paragraph">
+<p>有时候，为了简化简单工厂模式，我们可以将抽象产品类和工厂类合并，将静态工厂方法移至抽象产品类中，如图3所示：</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/简化的简单工厂模式.jpg" alt="简化的简单工厂模式">
+</div>
+</div>
+<div class="paragraph">
+<p>在图3中，客户端可以通过产品父类的静态工厂方法，根据参数的不同创建不同类型的产品子类对象，这种做法在JDK等类库和框架中也广泛存在。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_简单工厂模式总结">简单工厂模式总结</h3>
+<div class="paragraph">
+<p>简单工厂模式提供了专门的工厂类用于创建对象，将对象的创建和对象的使用分离开，它作为一种最简单的工厂模式在软件开发中得到了较为广泛的应用。</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>主要优点</p>
+<div class="paragraph">
+<p>简单工厂模式的主要优点如下：</p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>工厂类包含必要的判断逻辑，可以决定在什么时候创建哪一个产品类的实例，客户端可以免除直接创建产品对象的职责，而仅仅“消费”产品，简单工厂模式实现了对象创建和使用的分离。</p>
+</li>
+<li>
+<p>客户端无须知道所创建的具体产品类的类名，只需要知道具体产品类所对应的参数即可，对于一些复杂的类名，通过简单工厂模式可以在一定程度减少使用者的记忆量。</p>
+</li>
+<li>
+<p>通过引入配置文件，可以在不修改任何客户端代码的情况下更换和增加新的具体产品类，在一定程度上提高了系统的灵活性。</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>主要缺点</p>
+<div class="paragraph">
+<p>简单工厂模式的主要缺点如下：</p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>由于工厂类集中了所有产品的创建逻辑，职责过重，一旦不能正常工作，整个系统都要受到影响。</p>
+</li>
+<li>
+<p>使用简单工厂模式势必会增加系统中类的个数（引入了新的工厂类），增加了系统的复杂度和理解难度。</p>
+</li>
+<li>
+<p>系统扩展困难，一旦添加新产品就不得不修改工厂逻辑，在产品类型较多时，有可能造成工厂逻辑过于复杂，不利于系统的扩展和维护。</p>
+</li>
+<li>
+<p>简单工厂模式由于使用了静态工厂方法，造成工厂角色无法形成基于继承的等级结构。</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>适用场景</p>
+<div class="paragraph">
+<p>在以下情况下可以考虑使用简单工厂模式：</p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>工厂类负责创建的对象比较少，由于创建的对象较少，不会造成工厂方法中的业务逻辑太过复杂。</p>
+</li>
+<li>
+<p>客户端只知道传入工厂类的参数，对于如何创建对象并不关心。</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+使用简单工厂模式设计一个可以创建不同几何形状（如圆形、方形和三角形等）的绘图工具，每个几何图形都具有绘制draw()和擦除erase()两个方法，要求在绘制不支持的几何图形时，提示一个UnSupportedShapeException。
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>yobyzal </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=https://yobyzal.github.io/2019/01-simple-factory-pattern/>https://yobyzal.github.io/2019/01-simple-factory-pattern/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="https://yobyzal.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+                    #设计模式</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="https://yobyzal.github.io/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="https://yobyzal.github.io/2019/02-factory-method-pattern/" class="prev" rel="prev" title="02 - 工厂方法模式"><i class="iconfont icon-left"></i>&nbsp;02 - 工厂方法模式</a>
+         
+        
+        <a href="https://yobyzal.github.io/2019/00-abstract/" class="next" rel="next" title="00 - 设计模式概述">00 - 设计模式概述&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2019</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="https://yobyzal.github.io/">yobyzal</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

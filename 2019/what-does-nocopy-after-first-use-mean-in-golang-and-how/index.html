@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="yobyzal">
+  <meta name="description" content="yobyzal的网络笔记">
+  
+  
+  <link rel="prev" href="https://yobyzal.github.io/2019/how-to-assign-multiple-ip-addresses-to-single-network-card-in-linux/" />
+  
+  <link rel="canonical" href="https://yobyzal.github.io/2019/what-does-nocopy-after-first-use-mean-in-golang-and-how/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           [转载]What does “nocopy after first use” mean in golang and how | yobyzal的网络笔记
+       
+  </title>
+  <meta name="title" content="[转载]What does “nocopy after first use” mean in golang and how | yobyzal的网络笔记">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "https:\/\/yobyzal.github.io\/"
+    },
+    "articleSection" : "posts",
+    "name" : "[转载]What does “nocopy after first use” mean in golang and how",
+    "headline" : "[转载]What does “nocopy after first use” mean in golang and how",
+    "description" : "原文：https:\/\/medium.com\/@bronzesword\/what-does-nocopy-after-first-use-mean-in-golang-and-how-12396c31de47\n When we read golang source code or learn to use some builtin structs, frequently we may be told that “must not be copied after first use”, such as sync.Cond, sync.Map, sync.Mutex (nearly all types in sync package) and strings.Builder. Most of the time it is required so for safety reasons, for example you have a struct with a pointer field and you don’t want it to be copied since a shallow copy will make these two hold the same pointer and be unsafe.",
+    "inLanguage" : "zh-cn",
+    "author" : "yobyzal",
+    "creator" : "yobyzal",
+    "publisher": "yobyzal",
+    "accountablePerson" : "yobyzal",
+    "copyrightHolder" : "yobyzal",
+    "copyrightYear" : "2019",
+    "datePublished": "2019-09-03 08:24:57 \x2b0800 CST",
+    "dateModified" : "2019-09-03 08:24:57 \x2b0800 CST",
+    "url" : "https:\/\/yobyzal.github.io\/2019\/what-does-nocopy-after-first-use-mean-in-golang-and-how\/",
+    "wordCount" : "768",
+    "keywords" : [ "golang", "yobyzal的网络笔记"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://yobyzal.github.io/">yobyzal的网络笔记</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://yobyzal.github.io/">yobyzal的网络笔记</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">[转载]What does “nocopy after first use” mean in golang and how</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="https://yobyzal.github.io/" rel="author">yobyzal</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2019-09-03 itemprop="datePublished">September 3, 2019</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="https://yobyzal.github.io/categories/golang/"> Golang </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          
+
+<blockquote>
+<p>原文：<a href="https://medium.com/@bronzesword/what-does-nocopy-after-first-use-mean-in-golang-and-how-12396c31de47" rel="nofollow noreferrer" target="_blank">https://medium.com/@bronzesword/what-does-nocopy-after-first-use-mean-in-golang-and-how-12396c31de47</a></p>
+</blockquote>
+
+<p>When we read golang source code or learn to use some builtin structs, frequently we may be told that “must not be copied after first use”, such as <a href="https://golang.org/src/sync/cond.go" rel="nofollow noreferrer" target="_blank">sync.Cond</a>, <a href="https://golang.org/src/sync/map.go" rel="nofollow noreferrer" target="_blank">sync.Map</a>, <a href="https://golang.org/src/sync/mutex.go" rel="nofollow noreferrer" target="_blank">sync.Mutex</a> (nearly all types in sync package) and <a href="https://golang.org/src/strings/builder.go" rel="nofollow noreferrer" target="_blank">strings.Builder</a>. Most of the time it is required so for safety reasons, for example you have a struct with a pointer field and you don’t want it to be copied since a shallow copy will make these two hold the same pointer and be unsafe. So what does golang do to ensure that? There isn’t a perfect answer as far as I know (see discussions <a href="https://github.com/golang/go/issues/8005" rel="nofollow noreferrer" target="_blank">here</a>), but in this story, I will review the following two solutions and hope it provide a better understanding.</p>
+
+<h1 id="1-runtime-checking">1. runtime checking</h1>
+
+<p>This is done by encapsulating a pointer to itself and check before any further operation. A typical example is <code>strings.Builder</code> :</p>
+
+<pre><code class="language-go">type Builder struct {
+    addr *Builder
+    buf []byte
+}
+
+func (b *Builder) copyCheck() {
+    if b.addr == nil {
+       b.addr = (*Builder)(noescape(unsafe.Pointer(b)))
+    } else if b.addr != b {
+       panic(&quot;strings: illegal use of non-zero Builder copied by value&quot;)
+    }
+}
+
+func (b *Builder) Write(p []byte) (int, error) {
+    b.copyCheck()
+    ...
+}
+
+// test case
+var a strings.Builder
+a.Write([]byte(&quot;testa&quot;))
+
+var b = a
+b.Write([]byte(&quot;testb&quot;))   // will panic here
+</code></pre>
+
+<p>As you can see, when we declare builder <code>a</code> and write, <code>a.addr</code> will be assigned its own address. After we assign <code>a</code> to <code>b</code>, <code>a.addr</code> will be shallowly copied to <code>b.addr</code>, but the newly allocated address of <code>b</code> is certainly not the same as <code>a.addr</code>, so panic happens. This solution utilizes the fact that pointer is shallowly copied and easy to understand.</p>
+
+<p>Another example is <code>sync.Cond</code>:</p>
+
+<pre><code class="language-go">type Cond struct {
+    noCopy  noCopy
+    L       Locker
+    notify  notifyList
+    checker copyChecker
+}
+type copyChecker uintptrfunc (c *copyChecker) check() {
+    if uintptr(*c) != uintptr(unsafe.Pointer(c)) &amp;&amp;
+       !atomic.CompareAndSwapUintptr((*uintptr)(c), 0, uintptr(unsafe.Pointer(c))) &amp;&amp;
+       uintptr(*c) != uintptr(unsafe.Pointer(c)) {
+           panic(&quot;sync.Cond is copied&quot;)
+    }
+}
+func (c *Cond) Wait() {
+    c.checker.check()
+    ...
+}
+</code></pre>
+
+<p>It is a bit difficult to read the <code>check()</code> function at first sight, so let’s define a similar struct and try to find out why:</p>
+
+<pre><code class="language-go">type cond struct {
+    checker copyChecker
+}
+type copyChecker uintptrfunc (c *copyChecker) check() {
+    fmt.Printf(&quot;Before: c: %v, *c: %v, uintptr(*c): %v, uintptr(unsafe.Pointer(c)): %v\n&quot;, c, *c, uintptr(*c), uintptr(unsafe.Pointer(c)))
+    atomic.CompareAndSwapUintptr((*uintptr)(c), 0, uintptr(unsafe.Pointer(c)))
+    fmt.Printf(&quot;After: c: %v, *c: %v, uintptr(*c): %v, uintptr(unsafe.Pointer(c)): %v\n&quot;, c, *c, uintptr(*c), uintptr(unsafe.Pointer(c)))
+}
+// test case
+var a cond
+a.checker.check()
+
+b := a
+b.checker.check()
+
+// results
+Before: c: 0x414020, *c: 0, uintptr(*c): 0, uintptr(unsafe.Pointer(c)): 4276256
+After: c: 0x414020, *c: 4276256, uintptr(*c): 4276256, uintptr(unsafe.Pointer(c)): 4276256
+Before: c: 0x414044, *c: 4276256, uintptr(*c): 4276256, uintptr(unsafe.Pointer(c)): 4276292
+After: c: 0x414044, *c: 4276256, uintptr(*c): 4276256, uintptr(unsafe.Pointer(c)): 4276292
+</code></pre>
+
+<p>Clearly when we declare <code>a</code> , its <code>checker</code> field is <code>0</code>and the address of checker field is <code>0x414020</code> or the decimal <code>4276256</code> . After <code>CompareAndSwapUintptr()</code> , its checker field is assigned its own address, say <code>4276256</code> . When we assign <code>a</code> to <code>b</code> , the <code>checker</code> field of <code>a</code> is copied to that of <code>b</code> , but the address of b’s <code>checker</code> field is actually <code>0x414044</code> or the decimal <code>4276292</code>. So it finally meets all three conditions(in fact two) and detects copy. This is still a “self pointer” approach and I guess you got it.</p>
+
+<p>To summarize, runtime checking often uses a self pointer and won’t check until runtime.</p>
+
+<h1 id="2-go-vet-copylocks-checking">2. Go vet copylocks checking</h1>
+
+<p><code>-copylocks</code> is actually a <code>go vet</code> flag which checks whether a <code>locker</code> type is copied or not. A <code>locker</code> type is a type which has <code>Lock()</code> and <code>Unlock()</code> methods. See <a href="https://golang.org/src/cmd/vendor/golang.org/x/tools/go/analysis/passes/copylock/copylock.go?h=copylock" rel="nofollow noreferrer" target="_blank">here</a> for more details. As mentioned before, nearly all types in <code>sync</code> package must not be copied and actually it’s guaranteed just by encapsulating a <code>noCopy</code> struct:</p>
+
+<pre><code class="language-go">// src/sync/cond.go
+type noCopy struct{}
+func (*noCopy) Lock() {}
+func (*noCopy) Unlock() {}
+
+// sync.Pool
+type Pool struct {
+   noCopy noCopy
+   ...
+}
+
+// sync.WaitGroup
+type WaitGroup struct {
+   noCopy noCopy
+   ...
+}
+</code></pre>
+
+<p><code>Go vet</code> will examine every statement and operand for a <code>locker</code> type and in this way copy could be found before runtime. So if you want a type to be not copied, what you need to do is simply defining a <code>noCopy</code> struct in your package and encapsulating it as extra field like the following:</p>
+
+<pre><code class="language-go">type noCopy struct{}
+func (*noCopy) Lock() {}
+func (*noCopy) Unlock() {}
+
+type MyType struct {
+   noCopy noCopy
+   ...
+}
+</code></pre>
+
+<p>Then <code>go vet</code> will do the check work for you. That’s it.</p>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>Though currently we don’t have a perfect answer for this issue, these two approaches are still instructive in similar situations. Self pointer or go vet check? Give it a try next time :)</p>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>yobyzal </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=https://yobyzal.github.io/2019/what-does-nocopy-after-first-use-mean-in-golang-and-how/>https://yobyzal.github.io/2019/what-does-nocopy-after-first-use-mean-in-golang-and-how/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="https://yobyzal.github.io/tags/golang/">
+                    #golang</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="https://yobyzal.github.io/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="https://yobyzal.github.io/2019/how-to-assign-multiple-ip-addresses-to-single-network-card-in-linux/" class="prev" rel="prev" title="[转载]如何在Linux下为单网卡配置多个IP地址"><i class="iconfont icon-left"></i>&nbsp;[转载]如何在Linux下为单网卡配置多个IP地址</a>
+         
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2019</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="https://yobyzal.github.io/">yobyzal</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

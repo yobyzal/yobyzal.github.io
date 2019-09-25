@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="yobyzal">
+  <meta name="description" content="yobyzal的网络笔记">
+  
+  
+  <link rel="prev" href="https://yobyzal.github.io/2019/22-strategy-pattern/" />
+  <link rel="next" href="https://yobyzal.github.io/2019/20-observer-pattern/" />
+  <link rel="canonical" href="https://yobyzal.github.io/2019/21-state-pattern/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           21 - 状态模式 | yobyzal的网络笔记
+       
+  </title>
+  <meta name="title" content="21 - 状态模式 | yobyzal的网络笔记">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "https:\/\/yobyzal.github.io\/"
+    },
+    "articleSection" : "posts",
+    "name" : "21 - 状态模式",
+    "headline" : "21 - 状态模式",
+    "description" : "目录 状态模式-State Pattern 银行系统中的账户类设计 状态模式概述 完整解决方案 共享状态 使用环境类实现状态转换 状态模式总结 练习         本文整理自：https:\/\/blog.csdn.net\/lovelion\/article\/details\/17517213，在此仅作整理学习。     状态模式-State Pattern “人有悲欢离合，月有阴晴圆缺”，包括人在内，很多事物都具有多种状态，而且在不同状态下会具有不同的行为，这些状态在特定条件下还将发生相互转换。就像水，它可以凝固成冰，也可以受热蒸发后变成水蒸汽，水可以流动，冰可以雕刻，蒸汽可以扩散。我们可以用UML状态图来描述H2O的三种状态，如图1所示：\n   在软件系统中，有些对象也像水一样具有多种状态，这些状态在某些情况下能够相互转换，而且对象在不同的状态下也将具有不同的行为。为了更好地对这些具有多种状态的对象进行设计，我们可以使用一种被称之为状态模式的设计模式，本章我们将学习用于描述对象状态及其转换的状态模式。\n 银行系统中的账户类设计 Sunny软件公司欲为某银行开发一套信用卡业务系统，银行账户(Account)是该系统的核心类之一，通过分析，Sunny软件公司开发人员发现在该系统中，账户存在三种状态，且在不同状态下账户存在不同的行为，具体说明如下：\n  如果账户中余额大于等于0，则账户的状态为正常状态(Normal State)，此时用户既可以向该账户存款也可以从该账户取款；\n  如果账户中余额小于0，并且大于-2000，则账户的状态为透支状态(Overdraft State)，此时用户既可以向该账户存款也可以从该账户取款，但需要按天计算利息；\n  如果账户中余额等于-2000，那么账户的状态为受限状态(Restricted State)，此时用户只能向该账户存款，不能再从中取款，同时也将按天计算利息；\n  根据余额的不同，以上三种状态可发生相互转换。\n   Sunny软件公司开发人员对银行账户类进行分析，绘制了如图2所示UML状态图：\n   在图2中，NormalState表示正常状态，OverdraftState表示透支状态，RestrictedState表示受限状态，在这三种状态下账户对象拥有不同的行为，方法deposit()用于存款，withdraw()用于取款，computeInterest()用于计算利息，stateCheck()用于在每一次执行存款和取款操作后根据余额来判断是否要进行状态转换并实现状态转换，相同的方法在不同的状态中可能会有不同的实现。为了实现不同状态下对象的各种行为以及对象状态之间的相互转换，Sunny软件公司开发人员设计了一个较为庞大的账户类Account，其中部分代码如下所示：\n class Account { private String state; \/\/状态 private int balance; \/\/余额 ...... \/\/存款操作 public void deposit() { \/\/存款 stateCheck(); } \/\/取款操作 public void withdraw() { if (state.",
+    "inLanguage" : "zh-cn",
+    "author" : "yobyzal",
+    "creator" : "yobyzal",
+    "publisher": "yobyzal",
+    "accountablePerson" : "yobyzal",
+    "copyrightHolder" : "yobyzal",
+    "copyrightYear" : "2019",
+    "datePublished": "2019-09-25 11:34:24 \x2b0800 CST",
+    "dateModified" : "2019-09-25 11:34:24 \x2b0800 CST",
+    "url" : "https:\/\/yobyzal.github.io\/2019\/21-state-pattern\/",
+    "wordCount" : "1075",
+    "keywords" : [ "设计模式", "yobyzal的网络笔记"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://yobyzal.github.io/">yobyzal的网络笔记</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://yobyzal.github.io/">yobyzal的网络笔记</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">21 - 状态模式</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="https://yobyzal.github.io/" rel="author">yobyzal</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2019-09-25 itemprop="datePublished">September 25, 2019</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="https://yobyzal.github.io/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"> 设计模式 </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <div id="toc" class="toc">
+<div id="toctitle">目录</div>
+<ul class="sectlevel1">
+<li><a href="#_状态模式_state_pattern">状态模式-State Pattern</a>
+<ul class="sectlevel2">
+<li><a href="#_银行系统中的账户类设计">银行系统中的账户类设计</a></li>
+<li><a href="#_状态模式概述">状态模式概述</a></li>
+<li><a href="#_完整解决方案">完整解决方案</a></li>
+<li><a href="#_共享状态">共享状态</a></li>
+<li><a href="#_使用环境类实现状态转换">使用环境类实现状态转换</a></li>
+<li><a href="#_状态模式总结">状态模式总结</a></li>
+<li><a href="#_练习">练习</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+本文整理自：https://blog.csdn.net/lovelion/article/details/17517213，在此仅作整理学习。
+</td>
+</tr>
+</table>
+</div>
+<div class="sect1">
+<h2 id="_状态模式_state_pattern">状态模式-State Pattern</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>“人有悲欢离合，月有阴晴圆缺”，包括人在内，很多事物都具有多种状态，而且在不同状态下会具有不同的行为，这些状态在特定条件下还将发生相互转换。就像水，它可以凝固成冰，也可以受热蒸发后变成水蒸汽，水可以流动，冰可以雕刻，蒸汽可以扩散。我们可以用UML状态图来描述H2O的三种状态，如图1所示：</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/H2O的三种状态（未考虑临界点）.jpg" alt="H2O的三种状态（未考虑临界点）">
+</div>
+</div>
+<div class="paragraph">
+<p>在软件系统中，有些对象也像水一样具有多种状态，这些状态在某些情况下能够相互转换，而且对象在不同的状态下也将具有不同的行为。为了更好地对这些具有多种状态的对象进行设计，我们可以使用一种被称之为状态模式的设计模式，本章我们将学习用于描述对象状态及其转换的状态模式。</p>
+</div>
+<div class="sect2">
+<h3 id="_银行系统中的账户类设计">银行系统中的账户类设计</h3>
+<div class="paragraph">
+<p>Sunny软件公司欲为某银行开发一套信用卡业务系统，银行账户(Account)是该系统的核心类之一，通过分析，Sunny软件公司开发人员发现在该系统中，账户存在三种状态，且在不同状态下账户存在不同的行为，具体说明如下：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>如果账户中余额大于等于0，则账户的状态为正常状态(Normal State)，此时用户既可以向该账户存款也可以从该账户取款；</p>
+</li>
+<li>
+<p>如果账户中余额小于0，并且大于-2000，则账户的状态为透支状态(Overdraft State)，此时用户既可以向该账户存款也可以从该账户取款，但需要按天计算利息；</p>
+</li>
+<li>
+<p>如果账户中余额等于-2000，那么账户的状态为受限状态(Restricted State)，此时用户只能向该账户存款，不能再从中取款，同时也将按天计算利息；</p>
+</li>
+<li>
+<p>根据余额的不同，以上三种状态可发生相互转换。</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Sunny软件公司开发人员对银行账户类进行分析，绘制了如图2所示UML状态图：</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/银行账户状态图.jpg" alt="银行账户状态图">
+</div>
+</div>
+<div class="paragraph">
+<p>在图2中，NormalState表示正常状态，OverdraftState表示透支状态，RestrictedState表示受限状态，在这三种状态下账户对象拥有不同的行为，方法deposit()用于存款，withdraw()用于取款，computeInterest()用于计算利息，stateCheck()用于在每一次执行存款和取款操作后根据余额来判断是否要进行状态转换并实现状态转换，相同的方法在不同的状态中可能会有不同的实现。为了实现不同状态下对象的各种行为以及对象状态之间的相互转换，Sunny软件公司开发人员设计了一个较为庞大的账户类Account，其中部分代码如下所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">Account</span> {
+    <span class="directive">private</span> <span class="predefined-type">String</span> state; <span class="comment">//状态</span>
+    <span class="directive">private</span> <span class="type">int</span> balance; <span class="comment">//余额</span>
+    ......
+
+    <span class="comment">//存款操作</span>
+    public <span class="type">void</span> deposit() {
+        <span class="comment">//存款</span>
+        stateCheck();
+    }
+
+    <span class="comment">//取款操作</span>
+    <span class="directive">public</span> <span class="type">void</span> withdraw() {
+        <span class="keyword">if</span> (state.equalsIgnoreCase(<span class="string"><span class="delimiter">&quot;</span><span class="content">NormalState</span><span class="delimiter">&quot;</span></span>) || state.equalsIgnoreCase(<span class="string"><span class="delimiter">&quot;</span><span class="content">OverdraftState </span><span class="delimiter">&quot;</span></span>)) {
+            <span class="comment">//取款</span>
+            stateCheck();
+        }
+        <span class="keyword">else</span> {
+            <span class="comment">//取款受限</span>
+        }
+    }
+
+    <span class="comment">//计算利息操作</span>
+    <span class="directive">public</span> <span class="type">void</span> computeInterest() {
+        <span class="keyword">if</span>(state.equalsIgnoreCase(<span class="string"><span class="delimiter">&quot;</span><span class="content">OverdraftState</span><span class="delimiter">&quot;</span></span>) || state.equalsIgnoreCase(<span class="string"><span class="delimiter">&quot;</span><span class="content">RestrictedState </span><span class="delimiter">&quot;</span></span>)) {
+            <span class="comment">//计算利息</span>
+        }
+    }
+
+    <span class="comment">//状态检查和转换操作</span>
+    <span class="directive">public</span> <span class="type">void</span> stateCheck() {
+        <span class="keyword">if</span> (balance &gt;= <span class="integer">0</span>) {
+            state = <span class="string"><span class="delimiter">&quot;</span><span class="content">NormalState</span><span class="delimiter">&quot;</span></span>;
+        }
+        <span class="keyword">else</span> <span class="keyword">if</span> (balance &gt; -<span class="integer">2000</span> &amp;&amp; balance &lt; <span class="integer">0</span>) {
+            state = <span class="string"><span class="delimiter">&quot;</span><span class="content">OverdraftState</span><span class="delimiter">&quot;</span></span>;
+        }
+        <span class="keyword">else</span> <span class="keyword">if</span> (balance == -<span class="integer">2000</span>) {
+            state = <span class="string"><span class="delimiter">&quot;</span><span class="content">RestrictedState</span><span class="delimiter">&quot;</span></span>;
+        }
+        <span class="keyword">else</span> <span class="keyword">if</span> (balance &lt; -<span class="integer">2000</span>) {
+            <span class="comment">//操作受限</span>
+        }
+    }
+    ......
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>分析上述代码，我们不难发现存在如下几个问题：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>几乎每个方法中都包含状态判断语句，以判断在该状态下是否具有该方法以及在特定状态下该方法如何实现，导致代码非常冗长，可维护性较差；</p>
+</li>
+<li>
+<p>拥有一个较为复杂的stateCheck()方法，包含大量的if…else if…else…语句用于进行状态转换，代码测试难度较大，且不易于维护；</p>
+</li>
+<li>
+<p>系统扩展性较差，如果需要增加一种新的状态，如冻结状态（Frozen State，在该状态下既不允许存款也不允许取款），需要对原有代码进行大量修改，扩展起来非常麻烦。</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>为了解决这些问题，我们可以使用状态模式，在状态模式中，我们将对象在每一个状态下的行为和状态转移语句封装在一个个状态类中，通过这些状态类来分散冗长的条件转移语句，让系统具有更好的灵活性和可扩展性，状态模式可以在一定程度上解决上述问题。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_状态模式概述">状态模式概述</h3>
+<div class="paragraph">
+<p><strong>状态模式用于解决系统中复杂对象的状态转换以及不同状态下行为的封装问题</strong>。当系统中某个对象存在多个状态，这些状态之间可以进行转换，而且对象在不同状态下行为不相同时可以使用状态模式。状态模式将一个对象的状态从该对象中分离出来，封装到专门的状态类中，使得对象状态可以灵活变化，对于客户端而言，无须关心对象状态的转换以及对象所处的当前状态，无论对于何种状态的对象，客户端都可以一致处理。</p>
+</div>
+<div class="paragraph">
+<p>状态模式定义如下：</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+状态模式(State Pattern)：允许一个对象在其内部状态改变时改变它的行为，对象看起来似乎修改了它的类。其别名为状态对象(Objects for States)，状态模式是一种对象行为型模式。
+</blockquote>
+</div>
+<div class="paragraph">
+<p>在状态模式中引入了抽象状态类和具体状态类，它们是状态模式的核心，其结构如图3所示：</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/状态模式结构图.jpg" alt="状态模式结构图">
+</div>
+</div>
+<div class="paragraph">
+<p>在状态模式结构图中包含如下几个角色：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Context（环境类）：环境类又称为上下文类，它是拥有多种状态的对象。由于环境类的状态存在多样性且在不同状态下对象的行为有所不同，因此将状态独立出去形成单独的状态类。在环境类中维护一个抽象状态类State的实例，这个实例定义当前状态，在具体实现时，它是一个State子类的对象。</p>
+</li>
+<li>
+<p>State（抽象状态类）：它用于定义一个接口以封装与环境类的一个特定状态相关的行为，在抽象状态类中声明了各种不同状态对应的方法，而在其子类中实现类这些方法，由于不同状态下对象的行为可能不同，因此在不同子类中方法的实现可能存在不同，相同的方法可以写在抽象状态类中。</p>
+</li>
+<li>
+<p>ConcreteState（具体状态类）：它是抽象状态类的子类，每一个子类实现一个与环境类的一个状态相关的行为，每一个具体状态类对应环境的一个具体状态，不同的具体状态类其行为有所不同。</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>在状态模式中，我们将对象在不同状态下的行为封装到不同的状态类中，为了让系统具有更好的灵活性和可扩展性，同时对各状态下的共有行为进行封装，我们需要对状态进行抽象，引入了抽象状态类角色，其典型代码如下所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">abstract</span> <span class="type">class</span> <span class="class">State</span> {
+    <span class="comment">//声明抽象业务方法，不同的具体状态类可以不同的实现</span>
+    <span class="directive">public</span> <span class="directive">abstract</span> <span class="type">void</span> handle();
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>在抽象状态类的子类即具体状态类中实现了在抽象状态类中声明的业务方法，不同的具体状态类可以提供完全不同的方法实现，在实际使用时，在一个状态类中可能包含多个业务方法，如果在具体状态类中某些业务方法的实现完全相同，可以将这些方法移至抽象状态类，实现代码的复用，典型的具体状态类代码如下所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">ConcreteState</span> <span class="directive">extends</span> State {
+    <span class="directive">public</span> <span class="type">void</span> handle() {
+        <span class="comment">//方法具体实现代码</span>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>环境类维持一个对抽象状态类的引用，通过setState()方法可以向环境类注入不同的状态对象，再在环境类的业务方法中调用状态对象的方法，典型代码如下所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">Context</span> {
+    <span class="directive">private</span> State state; <span class="comment">//维持一个对抽象状态对象的引用</span>
+    <span class="directive">private</span> <span class="type">int</span> value; <span class="comment">//其他属性值，该属性值的变化可能会导致对象状态发生变化</span>
+
+    <span class="comment">//设置状态对象</span>
+    <span class="directive">public</span> <span class="type">void</span> setState(State state) {
+        <span class="local-variable">this</span>.state = state;
+    }
+
+    <span class="directive">public</span> <span class="type">void</span> request() {
+        <span class="comment">//其他代码</span>
+        state.handle(); <span class="comment">//调用状态对象的业务方法</span>
+        <span class="comment">//其他代码</span>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>环境类实际上是真正拥有状态的对象，我们只是将环境类中与状态有关的代码提取出来封装到专门的状态类中。在状态模式结构图中，环境类Context与抽象状态类State之间存在单向关联关系，在Context中定义了一个State对象。在实际使用时，它们之间可能存在更为复杂的关系，State与Context之间可能也存在依赖或者关联关系。</p>
+</div>
+<div class="paragraph">
+<p>在状态模式的使用过程中，一个对象的状态之间还可以进行相互转换，通常有两种实现状态转换的方式：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>统一由环境类来负责状态之间的转换</strong>，此时，环境类还充当了状态管理器(State Manager)角色，在环境类的业务方法中通过对某些属性值的判断实现状态转换，还可以提供一个专门的方法用于实现属性判断和状态转换，如下代码片段所示：</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="error">…</span><span class="error">…</span>
+<span class="directive">public</span> <span class="type">void</span> changeState() {
+    <span class="comment">//判断属性值，根据属性值进行状态转换</span>
+    <span class="keyword">if</span> (value == <span class="integer">0</span>) {
+        <span class="local-variable">this</span>.setState(<span class="keyword">new</span> ConcreteStateA());
+    }
+    <span class="keyword">else</span> <span class="keyword">if</span> (value == <span class="integer">1</span>) {
+        <span class="local-variable">this</span>.setState(<span class="keyword">new</span> ConcreteStateB());
+    }
+    <span class="error">…</span><span class="error">…</span>
+}
+<span class="error">…</span><span class="error">…</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p><strong>由具体状态类来负责状态之间的转换</strong>，可以在具体状态类的业务方法中判断环境类的某些属性值再根据情况为环境类设置新的状态对象，实现状态转换，同样，也可以提供一个专门的方法来负责属性值的判断和状态转换。此时，状态类与环境类之间就将存在依赖或关联关系，因为状态类需要访问环境类中的属性值，如下代码片段所示：</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="error">…</span><span class="error">…</span>
+<span class="directive">public</span> <span class="type">void</span> changeState(<span class="predefined-type">Context</span> ctx) {
+    <span class="comment">//根据环境对象中的属性值进行状态转换</span>
+    <span class="keyword">if</span> (ctx.getValue() == <span class="integer">1</span>) {
+        ctx.setState(<span class="keyword">new</span> ConcreteStateB());
+    }
+    <span class="keyword">else</span> <span class="keyword">if</span> (ctx.getValue() == <span class="integer">2</span>) {
+        ctx.setState(<span class="keyword">new</span> ConcreteStateC());
+    }
+    <span class="error">…</span><span class="error">…</span>
+}
+<span class="error">…</span><span class="error">…</span></code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+理解两种状态转换方式的异同？
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_完整解决方案">完整解决方案</h3>
+<div class="paragraph">
+<p>Sunny软件公司开发人员使用状态模式来解决账户状态的转换问题，客户端只需要执行简单的存款和取款操作，系统根据余额将自动转换到相应的状态，其基本结构如图4所示：</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/银行账户结构图.jpg" alt="银行账户结构图">
+</div>
+</div>
+<div class="paragraph">
+<p>在图4中，Account充当环境类角色，AccountState充当抽象状态角色，NormalState、OverdraftState和RestrictedState充当具体状态角色。完整代码如下所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">//银行账户：环境类</span>
+<span class="type">class</span> <span class="class">Account</span> {
+    <span class="directive">private</span> AccountState state; <span class="comment">//维持一个对抽象状态对象的引用</span>
+    <span class="directive">private</span> <span class="predefined-type">String</span> owner; <span class="comment">//开户名</span>
+    <span class="directive">private</span> <span class="type">double</span> balance = <span class="integer">0</span>; <span class="comment">//账户余额</span>
+
+    <span class="directive">public</span> Account(<span class="predefined-type">String</span> owner,<span class="type">double</span> init) {
+        <span class="local-variable">this</span>.owner = owner;
+        <span class="local-variable">this</span>.balance = balance;
+        <span class="local-variable">this</span>.state = <span class="keyword">new</span> NormalState(<span class="local-variable">this</span>); <span class="comment">//设置初始状态</span>
+        <span class="predefined-type">System</span>.out.println(<span class="local-variable">this</span>.owner + <span class="string"><span class="delimiter">&quot;</span><span class="content">开户，初始金额为</span><span class="delimiter">&quot;</span></span> + init);
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">---------------------------------------------</span><span class="delimiter">&quot;</span></span>);
+    }
+
+    <span class="directive">public</span> <span class="type">double</span> getBalance() {
+        <span class="keyword">return</span> <span class="local-variable">this</span>.balance;
+    }
+
+    <span class="directive">public</span> <span class="type">void</span> setBalance(<span class="type">double</span> balance) {
+        <span class="local-variable">this</span>.balance = balance;
+    }
+
+    <span class="directive">public</span> <span class="type">void</span> setState(AccountState state) {
+        <span class="local-variable">this</span>.state = state;
+    }
+
+    <span class="directive">public</span> <span class="type">void</span> deposit(<span class="type">double</span> amount) {
+        <span class="predefined-type">System</span>.out.println(<span class="local-variable">this</span>.owner + <span class="string"><span class="delimiter">&quot;</span><span class="content">存款</span><span class="delimiter">&quot;</span></span> + amount);
+        state.deposit(amount); <span class="comment">//调用状态对象的deposit()方法</span>
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">现在余额为</span><span class="delimiter">&quot;</span></span>+ <span class="local-variable">this</span>.balance);
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">现在帐户状态为</span><span class="delimiter">&quot;</span></span>+ <span class="local-variable">this</span>.state.getClass().getName());
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">---------------------------------------------</span><span class="delimiter">&quot;</span></span>);
+    }
+
+    <span class="directive">public</span> <span class="type">void</span> withdraw(<span class="type">double</span> amount) {
+        <span class="predefined-type">System</span>.out.println(<span class="local-variable">this</span>.owner + <span class="string"><span class="delimiter">&quot;</span><span class="content">取款</span><span class="delimiter">&quot;</span></span> + amount);
+        state.withdraw(amount); <span class="comment">//调用状态对象的withdraw()方法</span>
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">现在余额为</span><span class="delimiter">&quot;</span></span>+ <span class="local-variable">this</span>.balance);
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">现在帐户状态为</span><span class="delimiter">&quot;</span></span>+ <span class="local-variable">this</span>. state.getClass().getName());
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">---------------------------------------------</span><span class="delimiter">&quot;</span></span>);
+    }
+
+    <span class="directive">public</span> <span class="type">void</span> computeInterest()
+    {
+        state.computeInterest(); <span class="comment">//调用状态对象的computeInterest()方法</span>
+    }
+}
+
+<span class="comment">//抽象状态类</span>
+<span class="directive">abstract</span> <span class="type">class</span> <span class="class">AccountState</span> {
+    <span class="directive">protected</span> Account acc;
+    <span class="directive">public</span> <span class="directive">abstract</span> <span class="type">void</span> deposit(<span class="type">double</span> amount);
+    <span class="directive">public</span> <span class="directive">abstract</span> <span class="type">void</span> withdraw(<span class="type">double</span> amount);
+    <span class="directive">public</span> <span class="directive">abstract</span> <span class="type">void</span> computeInterest();
+    <span class="directive">public</span> <span class="directive">abstract</span> <span class="type">void</span> stateCheck();
+}
+
+<span class="comment">//正常状态：具体状态类</span>
+<span class="type">class</span> <span class="class">NormalState</span> <span class="directive">extends</span> AccountState {
+    <span class="directive">public</span> NormalState(Account acc) {
+        <span class="local-variable">this</span>.acc = acc;
+    }
+
+<span class="directive">public</span> NormalState(AccountState state) {
+        <span class="local-variable">this</span>.acc = state.acc;
+    }
+
+    <span class="directive">public</span> <span class="type">void</span> deposit(<span class="type">double</span> amount) {
+        acc.setBalance(acc.getBalance() + amount);
+        stateCheck();
+    }
+
+    <span class="directive">public</span> <span class="type">void</span> withdraw(<span class="type">double</span> amount) {
+        acc.setBalance(acc.getBalance() - amount);
+        stateCheck();
+    }
+
+    <span class="directive">public</span> <span class="type">void</span> computeInterest()
+    {
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">正常状态，无须支付利息！</span><span class="delimiter">&quot;</span></span>);
+    }
+
+    <span class="comment">//状态转换</span>
+    <span class="directive">public</span> <span class="type">void</span> stateCheck() {
+        <span class="keyword">if</span> (acc.getBalance() &gt; -<span class="integer">2000</span> &amp;&amp; acc.getBalance() &lt;= <span class="integer">0</span>) {
+            acc.setState(<span class="keyword">new</span> OverdraftState(<span class="local-variable">this</span>));
+        }
+        <span class="keyword">else</span> <span class="keyword">if</span> (acc.getBalance() == -<span class="integer">2000</span>) {
+            acc.setState(<span class="keyword">new</span> RestrictedState(<span class="local-variable">this</span>));
+        }
+        <span class="keyword">else</span> <span class="keyword">if</span> (acc.getBalance() &lt; -<span class="integer">2000</span>) {
+            <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">操作受限！</span><span class="delimiter">&quot;</span></span>);
+        }
+    }
+}
+
+<span class="comment">//透支状态：具体状态类</span>
+<span class="type">class</span> <span class="class">OverdraftState</span> <span class="directive">extends</span> AccountState
+{
+    <span class="directive">public</span> OverdraftState(AccountState state) {
+        <span class="local-variable">this</span>.acc = state.acc;
+    }
+
+    <span class="directive">public</span> <span class="type">void</span> deposit(<span class="type">double</span> amount) {
+        acc.setBalance(acc.getBalance() + amount);
+        stateCheck();
+    }
+
+    <span class="directive">public</span> <span class="type">void</span> withdraw(<span class="type">double</span> amount) {
+        acc.setBalance(acc.getBalance() - amount);
+        stateCheck();
+    }
+
+    <span class="directive">public</span> <span class="type">void</span> computeInterest() {
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">计算利息！</span><span class="delimiter">&quot;</span></span>);
+    }
+
+    <span class="comment">//状态转换</span>
+    <span class="directive">public</span> <span class="type">void</span> stateCheck() {
+        <span class="keyword">if</span> (acc.getBalance() &gt; <span class="integer">0</span>) {
+            acc.setState(<span class="keyword">new</span> NormalState(<span class="local-variable">this</span>));
+        }
+        <span class="keyword">else</span> <span class="keyword">if</span> (acc.getBalance() == -<span class="integer">2000</span>) {
+            acc.setState(<span class="keyword">new</span> RestrictedState(<span class="local-variable">this</span>));
+        }
+        <span class="keyword">else</span> <span class="keyword">if</span> (acc.getBalance() &lt; -<span class="integer">2000</span>) {
+            <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">操作受限！</span><span class="delimiter">&quot;</span></span>);
+        }
+    }
+}
+
+<span class="comment">//受限状态：具体状态类</span>
+<span class="type">class</span> <span class="class">RestrictedState</span> <span class="directive">extends</span> AccountState {
+    <span class="directive">public</span> RestrictedState(AccountState state) {
+        <span class="local-variable">this</span>.acc = state.acc;
+    }
+
+    <span class="directive">public</span> <span class="type">void</span> deposit(<span class="type">double</span> amount) {
+        acc.setBalance(acc.getBalance() + amount);
+        stateCheck();
+    }
+
+    <span class="directive">public</span> <span class="type">void</span> withdraw(<span class="type">double</span> amount) {
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">帐号受限，取款失败</span><span class="delimiter">&quot;</span></span>);
+    }
+
+    <span class="directive">public</span> <span class="type">void</span> computeInterest() {
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">计算利息！</span><span class="delimiter">&quot;</span></span>);
+    }
+
+    <span class="comment">//状态转换</span>
+    <span class="directive">public</span> <span class="type">void</span> stateCheck() {
+        <span class="keyword">if</span>(acc.getBalance() &gt; <span class="integer">0</span>) {
+            acc.setState(<span class="keyword">new</span> NormalState(<span class="local-variable">this</span>));
+        }
+        <span class="keyword">else</span> <span class="keyword">if</span>(acc.getBalance() &gt; -<span class="integer">2000</span>) {
+            acc.setState(<span class="keyword">new</span> OverdraftState(<span class="local-variable">this</span>));
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>编写如下客户端测试代码：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">Client</span> {
+    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main(<span class="predefined-type">String</span> args<span class="type">[]</span>) {
+        Account acc = <span class="keyword">new</span> Account(<span class="string"><span class="delimiter">&quot;</span><span class="content">段誉</span><span class="delimiter">&quot;</span></span>,<span class="float">0.0</span>);
+        acc.deposit(<span class="integer">1000</span>);
+        acc.withdraw(<span class="integer">2000</span>);
+        acc.deposit(<span class="integer">3000</span>);
+        acc.withdraw(<span class="integer">4000</span>);
+        acc.withdraw(<span class="integer">1000</span>);
+        acc.computeInterest();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>编译并运行程序，输出结果如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>段誉开户，初始金额为0.0
+---------------------------------------------
+段誉存款1000.0
+现在余额为1000.0
+现在帐户状态为NormalState
+---------------------------------------------
+段誉取款2000.0
+现在余额为-1000.0
+现在帐户状态为OverdraftState
+---------------------------------------------
+段誉存款3000.0
+现在余额为2000.0
+现在帐户状态为NormalState
+---------------------------------------------
+段誉取款4000.0
+现在余额为-2000.0
+现在帐户状态为RestrictedState
+---------------------------------------------
+段誉取款1000.0
+帐号受限，取款失败
+现在余额为-2000.0
+现在帐户状态为RestrictedState
+---------------------------------------------
+计算利息！</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_共享状态">共享状态</h3>
+<div class="paragraph">
+<p>在有些情况下，多个环境对象可能需要共享同一个状态，如果希望在系统中实现多个环境对象共享一个或多个状态对象，那么需要<strong>将这些状态对象定义为环境类的静态成员对象</strong>。</p>
+</div>
+<div class="paragraph">
+<p>下面通过一个简单实例来说明如何实现共享状态：</p>
+</div>
+<div class="paragraph">
+<p>如果某系统要求两个开关对象要么都处于开的状态，要么都处于关的状态，在使用时它们的状态必须保持一致，开关可以由开转换到关，也可以由关转换到开。</p>
+</div>
+<div class="paragraph">
+<p>可以使用状态模式来实现开关的设计，其结构如图5所示：</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/开关及其状态设计结构图.jpg" alt="开关及其状态设计结构图">
+</div>
+</div>
+<div class="paragraph">
+<p>开关类Switch代码如下所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">Switch</span> {
+    <span class="directive">private</span> <span class="directive">static</span> State state,onState,offState; <span class="comment">//定义三个静态的状态对象</span>
+    <span class="directive">private</span> <span class="predefined-type">String</span> name;
+
+    <span class="directive">public</span> Switch(<span class="predefined-type">String</span> name) {
+        <span class="local-variable">this</span>.name = name;
+        onState = <span class="keyword">new</span> OnState();
+        offState = <span class="keyword">new</span> OffState();
+        <span class="local-variable">this</span>.state = onState;
+    }
+
+    <span class="directive">public</span> <span class="type">void</span> setState(State state) {
+        <span class="local-variable">this</span>.state = state;
+    }
+
+    <span class="directive">public</span> <span class="directive">static</span> State getState(<span class="predefined-type">String</span> type) {
+        <span class="keyword">if</span> (type.equalsIgnoreCase(<span class="string"><span class="delimiter">&quot;</span><span class="content">on</span><span class="delimiter">&quot;</span></span>)) {
+            <span class="keyword">return</span> onState;
+        }
+        <span class="keyword">else</span> {
+            <span class="keyword">return</span> offState;
+        }
+    }
+
+    <span class="comment">//打开开关</span>
+    <span class="directive">public</span> <span class="type">void</span> on() {
+        <span class="predefined-type">System</span>.out.print(name);
+        state.on(<span class="local-variable">this</span>);
+    }
+
+<span class="comment">//关闭开关</span>
+    <span class="directive">public</span> <span class="type">void</span> off() {
+        <span class="predefined-type">System</span>.out.print(name);
+        state.off(<span class="local-variable">this</span>);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>抽象状态类如下代码所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">abstract</span> <span class="type">class</span> <span class="class">State</span> {
+    <span class="directive">public</span> <span class="directive">abstract</span> <span class="type">void</span> on(Switch s);
+    <span class="directive">public</span> <span class="directive">abstract</span> <span class="type">void</span> off(Switch s);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>两个具体状态类如下代码所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">//打开状态</span>
+<span class="type">class</span> <span class="class">OnState</span> <span class="directive">extends</span> State {
+    <span class="directive">public</span> <span class="type">void</span> on(Switch s) {
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">已经打开！</span><span class="delimiter">&quot;</span></span>);
+    }
+
+    <span class="directive">public</span> <span class="type">void</span> off(Switch s) {
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">关闭！</span><span class="delimiter">&quot;</span></span>);
+        s.setState(Switch.getState(<span class="string"><span class="delimiter">&quot;</span><span class="content">off</span><span class="delimiter">&quot;</span></span>));
+    }
+}
+
+<span class="comment">//关闭状态</span>
+<span class="type">class</span> <span class="class">OffState</span> <span class="directive">extends</span> State {
+    <span class="directive">public</span> <span class="type">void</span> on(Switch s) {
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">打开！</span><span class="delimiter">&quot;</span></span>);
+        s.setState(Switch.getState(<span class="string"><span class="delimiter">&quot;</span><span class="content">on</span><span class="delimiter">&quot;</span></span>));
+    }
+
+    <span class="directive">public</span> <span class="type">void</span> off(Switch s) {
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">已经关闭！</span><span class="delimiter">&quot;</span></span>);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>编写如下客户端代码进行测试：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">Client</span> {
+    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main(<span class="predefined-type">String</span> args<span class="type">[]</span>) {
+        Switch s1,s2;
+        s1=<span class="keyword">new</span> Switch(<span class="string"><span class="delimiter">&quot;</span><span class="content">开关1</span><span class="delimiter">&quot;</span></span>);
+        s2=<span class="keyword">new</span> Switch(<span class="string"><span class="delimiter">&quot;</span><span class="content">开关2</span><span class="delimiter">&quot;</span></span>);
+
+        s1.on();
+        s2.on();
+        s1.off();
+        s2.off();
+        s2.on();
+        s1.on();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>输出结果如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>开关1已经打开！
+开关2已经打开！
+开关1关闭！
+开关2已经关闭！
+开关2打开！
+开关1已经打开！</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>从输出结果可以得知两个开关共享相同的状态，如果第一个开关关闭，则第二个开关也将关闭，再次关闭时将输出“已经关闭”；打开时也将得到类似结果。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_使用环境类实现状态转换">使用环境类实现状态转换</h3>
+<div class="paragraph">
+<p>在状态模式中实现状态转换时，<strong>具体状态类可通过调用环境类Context的setState()方法进行状态的转换操作，也可以统一由环境类Context来实现状态的转换</strong>。此时，增加新的具体状态类可能需要修改其他具体状态类或者环境类的源代码，否则系统无法转换到新增状态。但是对于客户端来说，无须关心状态类，可以为环境类设置默认的状态类，而将状态的转换工作交给具体状态类或环境类来完成，具体的转换细节对于客户端而言是透明的。</p>
+</div>
+<div class="paragraph">
+<p>在上面的“银行账户状态转换”实例中，我们通过具体状态类来实现状态的转换，在每一个具体状态类中都包含一个stateCheck()方法，在该方法内部实现状态的转换，除此之外，我们还可以通过环境类来实现状态转换，<strong>环境类作为一个状态管理器，统一实现各种状态之间的转换操作</strong>。</p>
+</div>
+<div class="paragraph">
+<p>下面通过一个包含循环状态的简单实例来说明如何使用环境类实现状态转换。</p>
+</div>
+<div class="paragraph">
+<p>Sunny软件公司某开发人员欲开发一个屏幕放大镜工具，其具体功能描述如下：</p>
+</div>
+<div class="paragraph">
+<p>用户单击“放大镜”按钮之后屏幕将放大一倍，再点击一次“放大镜”按钮屏幕再放大一倍，第三次点击该按钮后屏幕将还原到默认大小。</p>
+</div>
+<div class="paragraph">
+<p>可以考虑使用状态模式来设计该屏幕放大镜工具，我们定义三个屏幕状态类NormalState、LargerState和LargestState来对应屏幕的三种状态，分别是正常状态、二倍放大状态和四倍放大状态，屏幕类Screen充当环境类，其结构如图6所示：</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/屏幕放大镜工具结构图.jpg" alt="屏幕放大镜工具结构图">
+</div>
+</div>
+<div class="paragraph">
+<p>本实例核心代码如下所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">//屏幕类</span>
+<span class="type">class</span> <span class="class">Screen</span> {
+    <span class="comment">//枚举所有的状态，currentState表示当前状态</span>
+    <span class="directive">private</span> State currentState, normalState, largerState, largestState;
+
+    <span class="directive">public</span> Screen() {
+        <span class="local-variable">this</span>.normalState = <span class="keyword">new</span> NormalState(); <span class="comment">//创建正常状态对象</span>
+        <span class="local-variable">this</span>.largerState = <span class="keyword">new</span> LargerState(); <span class="comment">//创建二倍放大状态对象</span>
+        <span class="local-variable">this</span>.largestState = <span class="keyword">new</span> LargestState(); <span class="comment">//创建四倍放大状态对象</span>
+        <span class="local-variable">this</span>.currentState = normalState; <span class="comment">//设置初始状态</span>
+        <span class="local-variable">this</span>.currentState.display();
+    }
+
+    <span class="directive">public</span> <span class="type">void</span> setState(State state) {
+        <span class="local-variable">this</span>.currentState = state;
+    }
+
+    <span class="comment">//单击事件处理方法，封转了对状态类中业务方法的调用和状态的转换</span>
+    <span class="directive">public</span> <span class="type">void</span> onClick() {
+        <span class="keyword">if</span> (<span class="local-variable">this</span>.currentState == normalState) {
+            <span class="local-variable">this</span>.setState(largerState);
+            <span class="local-variable">this</span>.currentState.display();
+        }
+        <span class="keyword">else</span> <span class="keyword">if</span> (<span class="local-variable">this</span>.currentState == largerState) {
+            <span class="local-variable">this</span>.setState(largestState);
+            <span class="local-variable">this</span>.currentState.display();
+        }
+        <span class="keyword">else</span> <span class="keyword">if</span> (<span class="local-variable">this</span>.currentState == largestState) {
+            <span class="local-variable">this</span>.setState(normalState);
+            <span class="local-variable">this</span>.currentState.display();
+        }
+    }
+}
+
+<span class="comment">//抽象状态类</span>
+<span class="directive">abstract</span> <span class="type">class</span> <span class="class">State</span> {
+    <span class="directive">public</span> <span class="directive">abstract</span> <span class="type">void</span> display();
+}
+
+<span class="comment">//正常状态类</span>
+<span class="type">class</span> <span class="class">NormalState</span> <span class="directive">extends</span> State{
+    <span class="directive">public</span> <span class="type">void</span> display() {
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">正常大小！</span><span class="delimiter">&quot;</span></span>);
+    }
+}
+
+<span class="comment">//二倍状态类</span>
+<span class="type">class</span> <span class="class">LargerState</span> <span class="directive">extends</span> State{
+    <span class="directive">public</span> <span class="type">void</span> display() {
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">二倍大小！</span><span class="delimiter">&quot;</span></span>);
+    }
+}
+
+<span class="comment">//四倍状态类</span>
+<span class="type">class</span> <span class="class">LargestState</span> <span class="directive">extends</span> State{
+    <span class="directive">public</span> <span class="type">void</span> display() {
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">四倍大小！</span><span class="delimiter">&quot;</span></span>);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>在上述代码中，所有的状态转换操作都由环境类Screen来实现，此时，环境类充当了状态管理器角色。如果需要增加新的状态，例如“八倍状态类”，需要修改环境类，这在一定程度上违背了“开闭原则”，但对其他状态类没有任何影响。</p>
+</div>
+<div class="paragraph">
+<p>编写如下客户端代码进行测试：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">Client</span> {
+    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main(<span class="predefined-type">String</span> args<span class="type">[]</span>) {
+        Screen screen = <span class="keyword">new</span> Screen();
+        screen.onClick();
+        screen.onClick();
+        screen.onClick();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>输出结果如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>正常大小！
+二倍大小！
+四倍大小！
+正常大小！</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_状态模式总结">状态模式总结</h3>
+<div class="paragraph">
+<p>状态模式将一个对象在不同状态下的不同行为封装在一个个状态类中，通过设置不同的状态对象可以让环境对象拥有不同的行为，而状态转换的细节对于客户端而言是透明的，方便了客户端的使用。在实际开发中，状态模式具有较高的使用频率，在工作流和游戏开发中状态模式都得到了广泛的应用，例如公文状态的转换、游戏中角色的升级等。</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>主要优点</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>状态模式的主要优点如下：</p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>封装了状态的转换规则，在状态模式中可以将状态的转换代码封装在环境类或者具体状态类中，可以对状态转换代码进行集中管理，而不是分散在一个个业务方法中。</p>
+</li>
+<li>
+<p>将所有与某个状态有关的行为放到一个类中，只需要注入一个不同的状态对象即可使环境对象拥有不同的行为。</p>
+</li>
+<li>
+<p>允许状态转换逻辑与状态对象合成一体，而不是提供一个巨大的条件语句块，状态模式可以让我们避免使用庞大的条件语句来将业务方法和状态转换代码交织在一起。</p>
+</li>
+<li>
+<p>可以让多个环境对象共享一个状态对象，从而减少系统中对象的个数。</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>主要缺点</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>状态模式的主要缺点如下：</p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>状态模式的使用必然会增加系统中类和对象的个数，导致系统运行开销增大。</p>
+</li>
+<li>
+<p>状态模式的结构与实现都较为复杂，如果使用不当将导致程序结构和代码的混乱，增加系统设计的难度。</p>
+</li>
+<li>
+<p>状态模式对“开闭原则”的支持并不太好，增加新的状态类需要修改那些负责状态转换的源代码，否则无法转换到新增状态；而且修改某个状态类的行为也需修改对应类的源代码。</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>适用场景</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>在以下情况下可以考虑使用状态模式：</p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>对象的行为依赖于它的状态（如某些属性值），状态的改变将导致行为的变化。</p>
+</li>
+<li>
+<p>在代码中包含大量与对象状态有关的条件语句，这些条件语句的出现，会导致代码的可维护性和灵活性变差，不能方便地增加和删除状态，并且导致客户类与类库之间的耦合增强。</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Sunny软件公司欲开发一款纸牌游戏软件，在该游戏软件中用户角色具有入门级(Primary)、熟练级(Secondary)、高手级(Professional)和骨灰级(Final)四种等级，角色的等级与其积分相对应，游戏胜利将增加积分，失败则扣除积分。入门级具有最基本的游戏功能play() ，熟练级增加了游戏胜利积分加倍功能doubleScore()，高手级在熟练级基础上再增加换牌功能changeCards()，骨灰级在高手级基础上再增加偷看他人的牌功能peekCards()。<br>
+试使用状态模式来设计该系统。
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_练习">练习</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>分析如下代码：</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">TestXYZ</span> {
+    <span class="type">int</span> behaviour;
+    <span class="comment">//Getter and Setter</span>
+    <span class="error">…</span><span class="error">…</span>
+    <span class="directive">public</span> <span class="type">void</span> handleAll() {
+        <span class="keyword">if</span> (behaviour == <span class="integer">0</span>) { <span class="error">…</span><span class="error">…</span> }
+        <span class="keyword">else</span> <span class="keyword">if</span> (behaviour == <span class="integer">1</span>) { <span class="error">…</span><span class="error">…</span> }
+        <span class="keyword">else</span> <span class="keyword">if</span> (behaviour == <span class="integer">2</span>) { <span class="error">…</span><span class="error">…</span> }
+        <span class="keyword">else</span> <span class="keyword">if</span> (behaviour == <span class="integer">3</span>) { <span class="error">…</span><span class="error">…</span> }
+        <span class="error">…</span><span class="error">…</span>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>为了提高代码的扩展性和健壮性，可以使用( )设计模式来进行重构。</p>
+</div>
+<div class="olist upperalpha">
+<ol class="upperalpha">
+<li>
+<p>Visitor（访问者） B. Facade（外观） C. Memento（备忘录） D. State（状态）</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>传输门是传输系统中的重要装置。传输门具有Open（打开）、Closed（关闭）、Opening（正在打开）、StayOpen（保持打开）、Closing（正在关闭）五种状态。触发状态的转换事件有click、complete和timeout三种。事件与其相应的状态转换如图7所示。</p>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/传输门响应事件与其状态转换图.jpg" alt="传输门响应事件与其状态转换图">
+</div>
+</div>
+<div class="paragraph">
+<p>试使用状态模式对传输门进行状态模拟，要求绘制相应的类图并编程模拟实现。</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>yobyzal </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=https://yobyzal.github.io/2019/21-state-pattern/>https://yobyzal.github.io/2019/21-state-pattern/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="https://yobyzal.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+                    #设计模式</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="https://yobyzal.github.io/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="https://yobyzal.github.io/2019/22-strategy-pattern/" class="prev" rel="prev" title="22 - 策略模式"><i class="iconfont icon-left"></i>&nbsp;22 - 策略模式</a>
+         
+        
+        <a href="https://yobyzal.github.io/2019/20-observer-pattern/" class="next" rel="next" title="20 - 观察者模式">20 - 观察者模式&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2019</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="https://yobyzal.github.io/">yobyzal</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

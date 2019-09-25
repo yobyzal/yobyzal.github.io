@@ -1,72 +1,106 @@
-<!doctype html>
-<html lang="zh-cn">
-  <head>
-    <title>【转载】如何在Linux下为单网卡配置多个IP地址 // yobyzal的网络笔记</title>
-    <meta charset="utf-8" />
-    <meta name="generator" content="Hugo 0.58.0" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="author" content="yobyzal" />
-    <meta name="description" content="" />
-    <link rel="stylesheet" href="https://yobyzal.github.io/css/main.min.59023e5fd38d6ecb0e1dfbb295077c3c67e00e3b9eb3feaf34b5a5e6b332897a.css" />
+<!DOCTYPE html>
+<html lang="cn">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>【转载】如何在Linux下为单网卡配置多个IP地址 | yobyzal的网络笔记</title>
+
+
+<link rel="stylesheet" href="/book.min.427ed924609226bbfed79841ff31b62551e603ad947043312ede9af0c4c3ca7a.css" integrity="sha256-Qn7ZJGCSJrv&#43;15hB/zG2JVHmA62UcEMxLt6a8MTDyno=">
+
+
+<script defer src="/search.min.f44d82415c8e641c91fb244977d849382c1821d747829532af058a56955527cc.js" integrity="sha256-9E2CQVyOZByR&#43;yRJd9hJOCwYIddHgpUyrwWKVpVVJ8w="></script>
+
+
+
+<link rel="icon" href="/favicon.png" type="image/x-icon">
+
+
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+  
+</head>
+
+<body>
+  <input type="checkbox" class="hidden" id="menu-control" />
+  <main class="flex container">
+    <aside class="book-menu fixed">
+      <nav>
+<h2 class="book-brand">
+  <a href="https://yobyzal.github.io/"><span>yobyzal的网络笔记</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" placeholder="Search" id="book-search-input" maxlength="64" readonly />
+  <div class="book-search-spinner spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
 
     
-    <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="【转载】如何在Linux下为单网卡配置多个IP地址"/>
-<meta name="twitter:description" content="转载：How To Assign Multiple IP Addresses To Single Network Card In Linux
- Some of you might wondering why would we assign multiple IP addresses to single Network card. There can be many reasons. Say for example, you are doing some testing on your Linux box that requires two or more network cards. Would you buy new one? No, It is not necessary! You can set multiple IP series, for example 192."/>
+  
+  
+  
 
-    <meta property="og:title" content="【转载】如何在Linux下为单网卡配置多个IP地址" />
-<meta property="og:description" content="转载：How To Assign Multiple IP Addresses To Single Network Card In Linux
- Some of you might wondering why would we assign multiple IP addresses to single Network card. There can be many reasons. Say for example, you are doing some testing on your Linux box that requires two or more network cards. Would you buy new one? No, It is not necessary! You can set multiple IP series, for example 192." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://yobyzal.github.io/posts/how-to-assign-multiple-ip-addresses-to-single-network-card-in-linux/" />
-<meta property="article:published_time" content="2019-09-03T08:24:57+08:00" />
-<meta property="article:modified_time" content="2019-09-03T08:24:57+08:00" />
+  <style>
+  nav ul a[href$="\2fposts\2fhow-to-assign-multiple-ip-addresses-to-single-network-card-in-linux\2f "] {
+      color: #004ed0;
+  }
+  </style>
+
+<ul>
+<li><a href="/"><strong>首页</strong></a></li>
+<li><a href="/docs/design-patterns"><strong>设计模式</strong></a></li>
+<li><a href="/posts/"><strong>Blog</strong></a></li>
+</ul>
 
 
-  </head>
-  <body>
-    <header class="app-header">
-      <a href="https://yobyzal.github.io/"><img class="app-header-avatar" src="/img/avatar.jpg" alt="yobyzal" /></a>
-      <h1>yobyzal的网络笔记</h1>
-      <p>yobyzal的网络笔记</p>
-      <div class="app-header-social">
-        
-          <a target="_blank" href="https://github.com/yobyzal"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
-  <title>github</title>
-  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
-</svg></a>
-        
-      </div>
-    </header>
-    <main class="app-container">
+
+
+
+
+
+</nav>
+
+
+<script>
+(function() {
+  var menu = document.querySelector("aside.book-menu nav");
+  addEventListener("beforeunload", function(event) {
+    localStorage.setItem("menu.scrollTop", menu.scrollTop);
+  });
+  menu.scrollTop = localStorage.getItem("menu.scrollTop");
+})();
+</script>
+
+    </aside>
+
+    <div class="book-posts">
+      <header class="flex align-center justify-between book-header">
+  <label for="menu-control">
+    <img src="/svg/menu.svg" alt="Menu" />
+  </label>
+  <strong>【转载】如何在Linux下为单网卡配置多个IP地址</strong>
+</header>
+
       
-  <article class="post">
-    <header class="post-header">
-      <h1 class ="post-title">【转载】如何在Linux下为单网卡配置多个IP地址</h1>
-      <div class="post-meta">
-        <div>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
-  <title>calendar</title>
-  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
-</svg>
-          Sep 3, 2019
-        </div>
-        <div>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
-  <title>clock</title>
-  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
-</svg>
-          8 min read
-        </div><div>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tag">
-  <title>tag</title>
-  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line>
-</svg>
-          <a class="tag" href="https://yobyzal.github.io/tags/os/">OS</a><a class="tag" href="https://yobyzal.github.io/tags/linux/">Linux</a></div></div>
-    </header>
-    <div class="post-content">
-      
+
+<header class="markdown">
+  <h1>【转载】如何在Linux下为单网卡配置多个IP地址</h1>
+  <h5>
+    <strong>September 3, 2019</strong>
+  </h5>
+</header>
+<article class="markdown">
 
 <blockquote>
 <p>转载：<a href="https://www.ostechnix.com/how-to-assign-multiple-ip-addresses-to-single-network-card-in-linux/">How To Assign Multiple IP Addresses To Single Network Card In Linux</a></p>
@@ -451,13 +485,14 @@ rtt min/avg/max/mdev = 0.097/0.100/0.105/0.012 ms
 </code></pre>
 
 <p>The new IP address has been added and it’s working. No need to buy a new card, do some complex router configuration, or anything. Using this method, we can easily add multiple different IP series in minutes.</p>
+</article>
 
-    </div>
-    <div class="post-footer">
       
     </div>
-  </article>
+  </main>
 
-    </main>
-  </body>
+  
+  
+</body>
+
 </html>
