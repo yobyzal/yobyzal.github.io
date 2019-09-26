@@ -44,7 +44,7 @@
     "articleSection" : "posts",
     "name" : "16 - 解释器模式",
     "headline" : "16 - 解释器模式",
-    "description" : "目录 解释器模式-Interpreter Pattern 机器人控制程序 文法规则和抽象语法树 解释器模式概述 完整解决方案 再谈Context的作用 解释器模式总结         本文整理自：https:\/\/blog.csdn.net\/lovelion\/article\/details\/17517213，在此仅作整理学习。     解释器模式-Interpreter Pattern 虽然目前计算机编程语言有好几百种，但有时候我们还是希望能用一些简单的语言来实现一些特定的操作，我们只要向计算机输入一个句子或文件，它就能够按照预先定义的文法规则来对句子或文件进行解释，从而实现相应的功能。例如提供一个简单的加法\/减法解释器，只要输入一个加法\/减法表达式，它就能够计算出表达式结果，如图18-1所示，当输入字符串表达式为“1 \x2b 2 \x2b 3 – 4 \x2b 1”时，将输出计算结果为3。\n   我们知道，像C\x2b、Java和C#等语言无法直接解释类似“1 2 \x2b 3 – 4 \x2b 1”这样的字符串（如果直接作为数值表达式时可以解释），我们必须自己定义一套文法规则来实现对这些语句的解释，即设计一个自定义语言。在实际开发中，这些简单的自定义语言可以基于现有的编程语言来设计，如果所基于的编程语言是面向对象语言，此时可以使用解释器模式来实现自定义语言。\n 机器人控制程序 Sunny软件公司欲为某玩具公司开发一套机器人控制程序，在该机器人控制程序中包含一些简单的英文控制指令，每一个指令对应一个表达式(expression)，该表达式可以是简单表达式也可以是复合表达式，每一个简单表达式由移动方向(direction)，移动方式(action)和移动距离(distance)三部分组成，其中移动方向包括上(up)、下(down)、左(left)、右(right)；移动方式包括移动(move)和快速移动(run)；移动距离为一个正整数。两个表达式之间可以通过与(and)连接，形成复合(composite)表达式。\n 用户通过对图形化的设置界面进行操作可以创建一个机器人控制指令，机器人在收到指令后将按照指令的设置进行移动，例如输入控制指令：up move 5，则“向上移动5个单位”；输入控制指令：down run 10 and left move 20，则“向下快速移动10个单位再向左移动20个单位”。\n Sunny软件公司开发人员决定自定义一个简单的语言来解释机器人控制指令，根据上述需求描述，用形式化语言来表示该简单语言的文法规则如下：\n expression ::= direction action distance | composite \/\/表达式 composite ::= expression \x27and\x27 expression \/\/复合表达式 direction ::= \x27up\x27 | \x27down\x27 | \x27left\x27 | \x27right\x27 \/\/移动方向 action ::= \x27move\x27 | \x27run\x27 \/\/移动方式 distance ::= an integer \/\/移动距离   上述语言一共定义了五条文法规则，对应五个语言单位，这些语言单位可以分为两类，一类为终结符（也称为终结符表达式），例如direction、action和distance，它们是语言的最小组成单位，不能再进行拆分；另一类为非终结符（也称为非终结符表达式），例如expression和composite，它们都是一个完整的句子，包含一系列终结符或非终结符。",
+    "description" : "本文整理自：https:\/\/blog.csdn.net\/lovelion\/article\/details\/17517213，在此仅作整理学习。     解释器模式-Interpreter Pattern 虽然目前计算机编程语言有好几百种，但有时候我们还是希望能用一些简单的语言来实现一些特定的操作，我们只要向计算机输入一个句子或文件，它就能够按照预先定义的文法规则来对句子或文件进行解释，从而实现相应的功能。例如提供一个简单的加法\/减法解释器，只要输入一个加法\/减法表达式，它就能够计算出表达式结果，如图18-1所示，当输入字符串表达式为“1 \x2b 2 \x2b 3 – 4 \x2b 1”时，将输出计算结果为3。\n   我们知道，像C\x2b、Java和C#等语言无法直接解释类似“1 2 \x2b 3 – 4 \x2b 1”这样的字符串（如果直接作为数值表达式时可以解释），我们必须自己定义一套文法规则来实现对这些语句的解释，即设计一个自定义语言。在实际开发中，这些简单的自定义语言可以基于现有的编程语言来设计，如果所基于的编程语言是面向对象语言，此时可以使用解释器模式来实现自定义语言。\n 机器人控制程序 Sunny软件公司欲为某玩具公司开发一套机器人控制程序，在该机器人控制程序中包含一些简单的英文控制指令，每一个指令对应一个表达式(expression)，该表达式可以是简单表达式也可以是复合表达式，每一个简单表达式由移动方向(direction)，移动方式(action)和移动距离(distance)三部分组成，其中移动方向包括上(up)、下(down)、左(left)、右(right)；移动方式包括移动(move)和快速移动(run)；移动距离为一个正整数。两个表达式之间可以通过与(and)连接，形成复合(composite)表达式。\n 用户通过对图形化的设置界面进行操作可以创建一个机器人控制指令，机器人在收到指令后将按照指令的设置进行移动，例如输入控制指令：up move 5，则“向上移动5个单位”；输入控制指令：down run 10 and left move 20，则“向下快速移动10个单位再向左移动20个单位”。\n Sunny软件公司开发人员决定自定义一个简单的语言来解释机器人控制指令，根据上述需求描述，用形式化语言来表示该简单语言的文法规则如下：\n expression ::= direction action distance | composite \/\/表达式 composite ::= expression \x27and\x27 expression \/\/复合表达式 direction ::= \x27up\x27 | \x27down\x27 | \x27left\x27 | \x27right\x27 \/\/移动方向 action ::= \x27move\x27 | \x27run\x27 \/\/移动方式 distance ::= an integer \/\/移动距离   上述语言一共定义了五条文法规则，对应五个语言单位，这些语言单位可以分为两类，一类为终结符（也称为终结符表达式），例如direction、action和distance，它们是语言的最小组成单位，不能再进行拆分；另一类为非终结符（也称为非终结符表达式），例如expression和composite，它们都是一个完整的句子，包含一系列终结符或非终结符。",
     "inLanguage" : "zh-cn",
     "author" : "yobyzal",
     "creator" : "yobyzal",
@@ -55,7 +55,7 @@
     "datePublished": "2019-09-25 11:34:24 \x2b0800 CST",
     "dateModified" : "2019-09-25 11:34:24 \x2b0800 CST",
     "url" : "https:\/\/yobyzal.github.io\/2019\/16-interpreter-pattern\/",
-    "wordCount" : "1116",
+    "wordCount" : "1107",
     "keywords" : [ "设计模式", "yobyzal的网络笔记"]
 }
 </script>
@@ -142,22 +142,7 @@
           
           
 
-          <div id="toc" class="toc">
-<div id="toctitle">目录</div>
-<ul class="sectlevel1">
-<li><a href="#_解释器模式_interpreter_pattern">解释器模式-Interpreter Pattern</a>
-<ul class="sectlevel2">
-<li><a href="#_机器人控制程序">机器人控制程序</a></li>
-<li><a href="#_文法规则和抽象语法树">文法规则和抽象语法树</a></li>
-<li><a href="#_解释器模式概述">解释器模式概述</a></li>
-<li><a href="#_完整解决方案">完整解决方案</a></li>
-<li><a href="#_再谈context的作用">再谈Context的作用</a></li>
-<li><a href="#_解释器模式总结">解释器模式总结</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<div class="admonitionblock note">
+          <div class="admonitionblock note">
 <table>
 <tr>
 <td class="icon">

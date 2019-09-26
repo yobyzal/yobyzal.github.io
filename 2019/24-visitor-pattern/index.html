@@ -44,7 +44,7 @@
     "articleSection" : "posts",
     "name" : "24 - 访问者模式",
     "headline" : "24 - 访问者模式",
-    "description" : "目录 访问者模式-Visitor Pattern OA系统中员工数据汇总 访问者模式概述 完整解决方案 访问者模式与组合模式联用 访问者模式总结         本文整理自：https:\/\/blog.csdn.net\/lovelion\/article\/details\/17517213，在此仅作整理学习。     访问者模式-Visitor Pattern 想必大家都去过医院，虽然没有人喜欢去医院（爱岗敬业的医务工作人员除外，微笑）。在医生开具处方单（药单）后，很多医院都存在如下处理流程：划价人员拿到处方单之后根据药品名称和数量计算总价，药房工作人员根据药品名称和数量准备药品，如图26-1所示：\n   在图26-1中，我们可以将处方单看成一个药品信息的集合，里面包含了一种或多种不同类型的药品信息，不同类型的工作人员（如划价人员和药房工作人员）在操作同一个药品信息集合时将提供不同的处理方式，而且可能还会增加新类型的工作人员来操作处方单。\n 在软件开发中，有时候我们也需要处理像处方单这样的集合对象结构，在该对象结构中存储了多个不同类型的对象信息，而且对同一对象结构中的元素的操作方式并不唯一，可能需要提供多种不同的处理方式，还有可能增加新的处理方式。在设计模式中，有一种模式可以满足上述要求，其模式动机就是以不同的方式操作复杂对象结构，该模式就是我们本章将要介绍的访问者模式。\n OA系统中员工数据汇总 Sunny软件公司欲为某银行开发一套OA系统，在该OA系统中包含一个员工信息管理子系统，该银行员工包括正式员工和临时工，每周人力资源部和财务部等部门需要对员工数据进行汇总，汇总数据包括员工工作时间、员工工资等。该公司基本制度如下：\n  正式员工(Full time Employee)每周工作时间为40小时，不同级别、不同部门的员工每周基本工资不同；如果超过40小时，超出部分按照100元\/小时作为加班费；如果少于40小时，所缺时间按照请假处理，请假所扣工资以80元\/小时计算，直到基本工资扣除到零为止。除了记录实际工作时间外，人力资源部需记录加班时长或请假时长，作为员工平时表现的一项依据。\n  临时工(Part time Employee)每周工作时间不固定，基本工资按小时计算，不同岗位的临时工小时工资不同。人力资源部只需记录实际工作时间。\n   人力资源部和财务部工作人员可以根据各自的需要对员工数据进行汇总处理，人力资源部负责汇总每周员工工作时间，而财务部负责计算每周员工工资。\n Sunny软件公司开发人员针对上述需求，提出了一个初始解决方案，其核心代码如下所示：\n import java.util.*; class EmployeeList { private ArrayList\x26lt;Employee\x26gt; list = new ArrayList\x26lt;Employee\x26gt;(); \/\/员工集合 \/\/增加员工 public void addEmployee(Employee employee) { list.add(employee); } \/\/处理员工数据 public void handle(String departmentName) { if(departmentName.",
+    "description" : "本文整理自：https:\/\/blog.csdn.net\/lovelion\/article\/details\/17517213，在此仅作整理学习。     访问者模式-Visitor Pattern 想必大家都去过医院，虽然没有人喜欢去医院（爱岗敬业的医务工作人员除外，微笑）。在医生开具处方单（药单）后，很多医院都存在如下处理流程：划价人员拿到处方单之后根据药品名称和数量计算总价，药房工作人员根据药品名称和数量准备药品，如图26-1所示：\n   在图26-1中，我们可以将处方单看成一个药品信息的集合，里面包含了一种或多种不同类型的药品信息，不同类型的工作人员（如划价人员和药房工作人员）在操作同一个药品信息集合时将提供不同的处理方式，而且可能还会增加新类型的工作人员来操作处方单。\n 在软件开发中，有时候我们也需要处理像处方单这样的集合对象结构，在该对象结构中存储了多个不同类型的对象信息，而且对同一对象结构中的元素的操作方式并不唯一，可能需要提供多种不同的处理方式，还有可能增加新的处理方式。在设计模式中，有一种模式可以满足上述要求，其模式动机就是以不同的方式操作复杂对象结构，该模式就是我们本章将要介绍的访问者模式。\n OA系统中员工数据汇总 Sunny软件公司欲为某银行开发一套OA系统，在该OA系统中包含一个员工信息管理子系统，该银行员工包括正式员工和临时工，每周人力资源部和财务部等部门需要对员工数据进行汇总，汇总数据包括员工工作时间、员工工资等。该公司基本制度如下：\n  正式员工(Full time Employee)每周工作时间为40小时，不同级别、不同部门的员工每周基本工资不同；如果超过40小时，超出部分按照100元\/小时作为加班费；如果少于40小时，所缺时间按照请假处理，请假所扣工资以80元\/小时计算，直到基本工资扣除到零为止。除了记录实际工作时间外，人力资源部需记录加班时长或请假时长，作为员工平时表现的一项依据。\n  临时工(Part time Employee)每周工作时间不固定，基本工资按小时计算，不同岗位的临时工小时工资不同。人力资源部只需记录实际工作时间。\n   人力资源部和财务部工作人员可以根据各自的需要对员工数据进行汇总处理，人力资源部负责汇总每周员工工作时间，而财务部负责计算每周员工工资。\n Sunny软件公司开发人员针对上述需求，提出了一个初始解决方案，其核心代码如下所示：\n import java.util.*; class EmployeeList { private ArrayList\x26lt;Employee\x26gt; list = new ArrayList\x26lt;Employee\x26gt;(); \/\/员工集合 \/\/增加员工 public void addEmployee(Employee employee) { list.add(employee); } \/\/处理员工数据 public void handle(String departmentName) { if(departmentName.equalsIgnoreCase(\x26quot;财务部\x26quot;)) \/\/财务部处理员工数据 { for(Object obj : list) { if(obj.",
     "inLanguage" : "zh-cn",
     "author" : "yobyzal",
     "creator" : "yobyzal",
@@ -55,7 +55,7 @@
     "datePublished": "2019-09-25 11:34:24 \x2b0800 CST",
     "dateModified" : "2019-09-25 11:34:24 \x2b0800 CST",
     "url" : "https:\/\/yobyzal.github.io\/2019\/24-visitor-pattern\/",
-    "wordCount" : "809",
+    "wordCount" : "801",
     "keywords" : [ "设计模式", "yobyzal的网络笔记"]
 }
 </script>
@@ -142,21 +142,7 @@
           
           
 
-          <div id="toc" class="toc">
-<div id="toctitle">目录</div>
-<ul class="sectlevel1">
-<li><a href="#_访问者模式_visitor_pattern">访问者模式-Visitor Pattern</a>
-<ul class="sectlevel2">
-<li><a href="#_oa系统中员工数据汇总">OA系统中员工数据汇总</a></li>
-<li><a href="#_访问者模式概述">访问者模式概述</a></li>
-<li><a href="#_完整解决方案">完整解决方案</a></li>
-<li><a href="#_访问者模式与组合模式联用">访问者模式与组合模式联用</a></li>
-<li><a href="#_访问者模式总结">访问者模式总结</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<div class="admonitionblock note">
+          <div class="admonitionblock note">
 <table>
 <tr>
 <td class="icon">
